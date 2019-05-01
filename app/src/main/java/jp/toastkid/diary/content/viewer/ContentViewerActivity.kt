@@ -5,12 +5,13 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.diary
+package jp.toastkid.diary.content.viewer
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import jp.toastkid.diary.R
 import kotlinx.android.synthetic.main.activity_content.*
 
 /**

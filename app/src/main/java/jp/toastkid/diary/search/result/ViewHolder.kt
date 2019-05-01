@@ -10,7 +10,7 @@ package jp.toastkid.diary.search.result
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import jp.toastkid.diary.ContentViewerActivity
+import jp.toastkid.diary.content.viewer.ContentViewerActivity
 import jp.toastkid.diary.R
 
 /**
