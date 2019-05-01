@@ -1,11 +1,13 @@
 package jp.toastkid.diary.search
 
+import jp.toastkid.diary.converter.NameDecoder
 import jp.toastkid.diary.search.result.DictionaryFile
 import okio.Okio
 import timber.log.Timber
 import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.zip.ZipInputStream
+
 
 /**
  * @author toastkidjp
@@ -23,7 +25,10 @@ object ZipSearcher {
                     Okio.buffer(Okio.source(zipInputStream)).also {
                         val content = it.readUtf8()
                         if (content.contains(keyword)) {
-                            results.add(DictionaryFile(nextEntry.name, content))
+                            val name = nextEntry.name
+                            val title =
+                                NameDecoder(name.substring(name.indexOf("/") + 1, name.lastIndexOf(".")))
+                            results.add(DictionaryFile(title, content))
                             //Timber.i(nextEntry.name + ": " + if (content.length < 100) { content } else {content.substring(0, 100) })
                         }
                     }
@@ -62,4 +67,5 @@ try (ZipInputStream zipIn = new ZipInputStream(inputStream,Charset.forName("SJIS
     }
  */
     }
+
 }
