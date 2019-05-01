@@ -10,8 +10,8 @@ package jp.toastkid.diary.search.result
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import jp.toastkid.diary.content.viewer.ContentViewerActivity
 import jp.toastkid.diary.R
+import jp.toastkid.diary.content.viewer.ContentViewerActivity
 
 /**
  * @author toastkidjp
@@ -22,10 +22,10 @@ class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         view.findViewById<TextView>(R.id.main_text).text = title
     }
 
-    fun setOnClick(content: String) {
+    fun setOnClick(dictionaryFile: DictionaryFile) {
         view.setOnClickListener {
             view.context?.let {
-                it.startActivity(ContentViewerActivity.makeIntent(it, content))
+                it.startActivity(ContentViewerActivity.makeIntent(it, dictionaryFile.title, dictionaryFile.content))
             }
         }
     }

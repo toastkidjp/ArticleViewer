@@ -2,4 +2,6 @@
     <string name="app_name">Diary</string>
     <string name="action_settings">Settings</string>
     <string name="action_set_target">Set target</string>
+    <string name="action_find">Find in page</string>
+    <string name="action_close">Close</string>
 </resources>

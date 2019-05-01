@@ -10,24 +10,57 @@ package jp.toastkid.diary.content.viewer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import jp.toastkid.diary.R
 import kotlinx.android.synthetic.main.activity_content.*
+import kotlinx.android.synthetic.main.module_page_searcher.*
 
 /**
  * @author toastkidjp
  */
 class ContentViewerActivity : AppCompatActivity() {
 
+    private lateinit var pageSearcher: PageSearcherModule
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content)
-        content.text = intent.getStringExtra("content")
+
+        toolbar.inflateMenu(R.menu.menu_content_viewer)
+        toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_close -> {
+                    finish()
+                    true
+                }
+                R.id.action_find -> {
+                    page_searcher.visibility = View.VISIBLE
+                    true
+                }
+                else -> false
+            }
+        }
+        content.setText(intent.getStringExtra("content"))
+        toolbar.title = intent.getStringExtra("title")
+
+        initializePageSearcher()
+    }
+
+    private fun initializePageSearcher() {
+        pageSearcher = PageSearcherModule(input, content)
+        find_clear.setOnClickListener { pageSearcher.clearInput() }
+        find_close.setOnClickListener { page_searcher.visibility = View.GONE }
+        find_upward.setOnClickListener { pageSearcher.find() }
+        find_downward.setOnClickListener { pageSearcher.find() }
     }
 
     companion object {
-        fun makeIntent(context: Context, content: String) =
+        fun makeIntent(context: Context, title: String, content: String) =
             Intent(context, ContentViewerActivity::class.java)
-                .also { it.putExtra("content", content) }
+                .also {
+                    it.putExtra("title", title)
+                    it.putExtra("content", content)
+                }
     }
 }

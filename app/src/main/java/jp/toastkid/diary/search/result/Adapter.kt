@@ -28,7 +28,7 @@ class Adapter(private val layoutInflater: LayoutInflater) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dictionaryFile = items[position]
         holder.setTitle(dictionaryFile.title)
-        holder.setOnClick(dictionaryFile.content)
+        holder.setOnClick(dictionaryFile)
     }
 
     fun replace(results: List<DictionaryFile>) {
