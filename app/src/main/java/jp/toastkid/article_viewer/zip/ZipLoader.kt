@@ -35,7 +35,7 @@ object ZipLoader {
                         val article = Article().also { a ->
                             a.title = NameDecoder(extractFileName(nextEntry.name))
                             a.content = content
-                            a.length = a.content.codePoints().sum()
+                            a.length = a.content.length
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             article.lastModified = nextEntry.lastModifiedTime.to(TimeUnit.MILLISECONDS)

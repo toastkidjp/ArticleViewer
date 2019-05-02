@@ -13,22 +13,31 @@ import androidx.recyclerview.widget.RecyclerView
 import jp.toastkid.article_viewer.R
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author toastkidjp
  */
 class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
-    fun setTitle(title: String) {
-        view.findViewById<TextView>(R.id.main_text).text = title
-    }
-
-    fun setOnClick(dictionaryFile: Article) {
+    fun bind(article: Article) {
+        view.findViewById<TextView>(R.id.main_text).text = article.title
         view.setOnClickListener {
             view.context?.let {
-                it.startActivity(ContentViewerActivity.makeIntent(it, dictionaryFile.title, dictionaryFile.content))
+                it.startActivity(ContentViewerActivity.makeIntent(it, article.title, article.content))
             }
         }
+        view.findViewById<TextView>(R.id.sub_text).setText(
+            "Last updated: ${DATE_FORMAT.get().format(Date().also { it.time = article.lastModified })}" +
+                    " / ${article.length} chars"
+        )
     }
 
+    companion object {
+        private val DATE_FORMAT = object : ThreadLocal<DateFormat>() {
+            override fun initialValue() = SimpleDateFormat("yyyy/MM/dd(E) HH:mm:ss", Locale.JAPAN)
+        }
+    }
 }
