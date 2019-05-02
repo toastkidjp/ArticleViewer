@@ -5,13 +5,13 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.article.search.result
+package jp.toastkid.article_viewer.article.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import jp.toastkid.article.R
-import jp.toastkid.article.article.Article
+import jp.toastkid.article_viewer.R
+import jp.toastkid.article_viewer.article.Article
 
 /**
  * @author toastkidjp

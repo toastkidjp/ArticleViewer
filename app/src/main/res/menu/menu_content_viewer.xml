@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="jp.toastkid.article.content.viewer.ContentViewerActivity">
+      tools:context=".article.detail.ContentViewerActivity">
 
     <item android:id="@+id/action_find"
           android:title="@string/action_find"

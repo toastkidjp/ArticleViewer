@@ -5,14 +5,14 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.article.content.viewer
+package jp.toastkid.article_viewer.article.detail
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import jp.toastkid.article.R
+import jp.toastkid.article_viewer.R
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.module_page_searcher.*
 

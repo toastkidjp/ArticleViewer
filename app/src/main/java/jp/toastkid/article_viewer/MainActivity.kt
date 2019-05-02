@@ -1,4 +1,4 @@
-package jp.toastkid.article
+package jp.toastkid.article_viewer
 
 import android.Manifest
 import android.app.Activity
@@ -21,10 +21,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import jp.toastkid.article.article.Article
-import jp.toastkid.article.article.ArticleRepository
-import jp.toastkid.article.search.result.Adapter
-import jp.toastkid.article.zip.ZipLoader
+import jp.toastkid.article_viewer.article.Article
+import jp.toastkid.article_viewer.article.ArticleRepository
+import jp.toastkid.article_viewer.article.list.Adapter
+import jp.toastkid.article_viewer.zip.FileExtractorFromUri
+import jp.toastkid.article_viewer.zip.ZipLoader
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import okio.Okio

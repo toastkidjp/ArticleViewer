@@ -1,4 +1,4 @@
-package jp.toastkid.article
+package jp.toastkid.article_viewer
 
 import org.junit.Test
 

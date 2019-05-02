@@ -1,9 +1,9 @@
-package jp.toastkid.article.zip
+package jp.toastkid.article_viewer.zip
 
 import android.os.Build
-import jp.toastkid.article.article.Article
-import jp.toastkid.article.article.ArticleRepository
-import jp.toastkid.article.converter.NameDecoder
+import jp.toastkid.article_viewer.article.Article
+import jp.toastkid.article_viewer.article.ArticleRepository
+import jp.toastkid.article_viewer.converter.NameDecoder
 import okio.Okio
 import timber.log.Timber
 import java.io.InputStream

@@ -5,12 +5,12 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.article
+package jp.toastkid.article_viewer
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import jp.toastkid.article.article.Article
-import jp.toastkid.article.article.ArticleRepository
+import jp.toastkid.article_viewer.article.Article
+import jp.toastkid.article_viewer.article.ArticleRepository
 
 /**
  * @author toastkidjp

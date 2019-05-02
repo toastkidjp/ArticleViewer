@@ -1,4 +1,4 @@
-package jp.toastkid.article
+package jp.toastkid.article_viewer.zip
 
 import android.annotation.TargetApi
 import android.content.ContentUris
@@ -64,7 +64,12 @@ object FileExtractorFromUri {
                 val contentUri: Uri? = MediaStore.Files.getContentUri("external")
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(split[1])
-                return getDataColumn(context, contentUri, selection, selectionArgs)
+                return getDataColumn(
+                    context,
+                    contentUri,
+                    selection,
+                    selectionArgs
+                )
             }
             else -> return ""
         }
