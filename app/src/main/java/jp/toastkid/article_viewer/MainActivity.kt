@@ -24,6 +24,7 @@ import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.list.Adapter
+import jp.toastkid.article_viewer.article.list.RecyclerViewScroller
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoader
 import kotlinx.android.synthetic.main.activity_main.*
@@ -181,6 +182,14 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_settings -> true
+            R.id.action_to_top -> {
+                RecyclerViewScroller.toTop(results)
+                true
+            }
+            R.id.action_to_bottom -> {
+                RecyclerViewScroller.toBottom(results)
+                true
+            }
             R.id.action_set_target -> {
                 selectTargetFile()
                 return true
