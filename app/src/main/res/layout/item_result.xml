@@ -5,7 +5,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:background="@drawable/ripple_transparent">
 
     <TextView
             android:id="@+id/main_text"
