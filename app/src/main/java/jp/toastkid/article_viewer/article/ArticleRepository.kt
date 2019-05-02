@@ -18,7 +18,7 @@ import androidx.room.Query
 @Dao
 interface ArticleRepository {
 
-    @Query("SELECT * FROM article ORDER BY title DESC")
+    @Query("SELECT * FROM article ORDER BY lastModified DESC LIMIT 500")
     fun getAll(): List<Article>
 
     @Query("SELECT * FROM article WHERE title LIKE :keyword OR content LIKE :keyword ORDER BY title DESC")
