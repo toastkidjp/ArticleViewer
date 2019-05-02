@@ -1,4 +1,4 @@
-package jp.toastkid.diary
+package jp.toastkid.article
 
 import android.annotation.TargetApi
 import android.content.ContentUris

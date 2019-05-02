@@ -5,21 +5,25 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.diary
+package jp.toastkid.article.article
 
-import android.app.Application
-import timber.log.Timber
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 /**
  * @author toastkidjp
  */
-class ExtendedApplication : Application() {
+@Entity
+class Article {
 
-    override fun onCreate() {
-        super.onCreate()
+    @PrimaryKey(autoGenerate = true)
+    var _id: Int = 0
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
-    }
+    var title: String = ""
+
+    var content: String = ""
+
+    var lastModified: Long = 0L
+
+    var length: Int = 0
 }

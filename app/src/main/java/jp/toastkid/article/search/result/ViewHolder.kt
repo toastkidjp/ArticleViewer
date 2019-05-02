@@ -5,13 +5,14 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.diary.search.result
+package jp.toastkid.article.search.result
 
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import jp.toastkid.diary.R
-import jp.toastkid.diary.content.viewer.ContentViewerActivity
+import jp.toastkid.article.R
+import jp.toastkid.article.article.Article
+import jp.toastkid.article.content.viewer.ContentViewerActivity
 
 /**
  * @author toastkidjp
@@ -22,7 +23,7 @@ class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         view.findViewById<TextView>(R.id.main_text).text = title
     }
 
-    fun setOnClick(dictionaryFile: DictionaryFile) {
+    fun setOnClick(dictionaryFile: Article) {
         view.setOnClickListener {
             view.context?.let {
                 it.startActivity(ContentViewerActivity.makeIntent(it, dictionaryFile.title, dictionaryFile.content))

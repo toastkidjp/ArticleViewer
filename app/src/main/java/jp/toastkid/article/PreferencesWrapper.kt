@@ -5,7 +5,7 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.diary
+package jp.toastkid.article
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -15,6 +15,13 @@ import android.content.SharedPreferences
  */
 class PreferencesWrapper(context: Context) {
 
+    /**
+     * TODO Divide and move package.
+     */
+    private enum class Key {
+        FILE_PATH, LAST_UPDATED
+    }
+
     private val preferences: SharedPreferences =
         context.getSharedPreferences(javaClass.canonicalName, Context.MODE_PRIVATE)
 
@@ -23,11 +30,19 @@ class PreferencesWrapper(context: Context) {
             return
         }
         preferences.edit()
-            .putString("path", targetPath)
+            .putString(Key.FILE_PATH.name, targetPath)
             .apply()
     }
 
     fun getTarget(): String? {
-        return preferences.getString("path", null)
+        return preferences.getString(Key.FILE_PATH.name, null)
+    }
+
+    fun setLastUpdated(ms: Long) {
+        preferences.edit().putLong(Key.LAST_UPDATED.name, ms).apply()
+    }
+
+    fun getLastUpdated(): Long {
+        return preferences.getLong(Key.LAST_UPDATED.name, 0L)
     }
 }

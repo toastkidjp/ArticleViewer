@@ -5,19 +5,20 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.diary.search.result
+package jp.toastkid.article.search.result
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import jp.toastkid.diary.R
+import jp.toastkid.article.R
+import jp.toastkid.article.article.Article
 
 /**
  * @author toastkidjp
  */
 class Adapter(private val layoutInflater: LayoutInflater) : RecyclerView.Adapter<ViewHolder>() {
 
-    private val items: MutableList<DictionaryFile> = mutableListOf()
+    private val items: MutableList<Article> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(layoutInflater.inflate(R.layout.item_result, parent, false))
@@ -31,9 +32,17 @@ class Adapter(private val layoutInflater: LayoutInflater) : RecyclerView.Adapter
         holder.setOnClick(dictionaryFile)
     }
 
-    fun replace(results: List<DictionaryFile>) {
-        items.clear()
+    fun replace(results: List<Article>) {
+        clear()
         items.addAll(results)
         notifyDataSetChanged()
+    }
+
+    fun clear() {
+        items.clear()
+    }
+
+    fun add(article: Article) {
+        items.add(article)
     }
 }

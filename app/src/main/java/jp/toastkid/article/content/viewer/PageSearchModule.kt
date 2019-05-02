@@ -5,7 +5,7 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.diary.content.viewer
+package jp.toastkid.article.content.viewer
 
 import android.text.Editable
 import android.text.TextWatcher

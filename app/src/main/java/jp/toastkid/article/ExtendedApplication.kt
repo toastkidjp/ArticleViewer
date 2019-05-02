@@ -5,12 +5,21 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.diary.search.result
+package jp.toastkid.article
+
+import android.app.Application
+import timber.log.Timber
 
 /**
  * @author toastkidjp
  */
-data class DictionaryFile(
-    val title: String,
-    val content: String
-)
+class ExtendedApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
+    }
+}

@@ -1,4 +1,4 @@
-package jp.toastkid.diary.converter
+package jp.toastkid.article.converter
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

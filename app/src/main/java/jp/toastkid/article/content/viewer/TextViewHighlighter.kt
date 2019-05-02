@@ -1,4 +1,4 @@
-package jp.toastkid.diary.content.viewer
+package jp.toastkid.article.content.viewer
 
 import android.text.Spannable
 import android.text.SpannableString
