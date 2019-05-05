@@ -32,12 +32,6 @@ class Adapter(
         holder.bind(items[position])
     }
 
-    fun replace(results: List<Result>) {
-        clear()
-        items.addAll(results)
-        notifyDataSetChanged()
-    }
-
     fun clear() {
         items.clear()
     }
