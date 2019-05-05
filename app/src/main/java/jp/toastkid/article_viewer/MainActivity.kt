@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             )
             .addTo(disposables)
 
-        input.editText?.setOnEditorActionListener { textView, i, keyEvent ->
+        input.setOnEditorActionListener { textView, i, keyEvent ->
             search(textView.text.toString())
             true
         }
@@ -164,6 +164,9 @@ class MainActivity : AppCompatActivity() {
         progress.visibility = View.VISIBLE
         progress_circular.visibility = View.VISIBLE
 
+        search_result.setText(R.string.message_search_in_progress)
+
+        val start = System.currentTimeMillis()
         Maybe.fromCallable(callable)
             .subscribeOn(Schedulers.io())
             .flatMapObservable { it.toObservable() }
@@ -179,6 +182,9 @@ class MainActivity : AppCompatActivity() {
                     progress.visibility = View.GONE
                     progress_circular.visibility = View.GONE
                     adapter.notifyDataSetChanged()
+                    search_result.also {
+                        it.text = "${adapter.itemCount} Articles / ${System.currentTimeMillis() - start}[ms]"
+                    }
                 }
             )
             .addTo(disposables)

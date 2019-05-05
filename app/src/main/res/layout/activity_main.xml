@@ -9,31 +9,39 @@
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 app:navigationIcon="@null"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input"
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-            >
+                    android:layout_height="match_parent">
                 <EditText
+                        android:id="@+id/input"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:autofillHints="Please input search keyword..."
                         android:inputType="textCapSentences"
-                        android:imeOptions="actionSearch"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                        android:imeOptions="actionSearch"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/search_result"/>
+                <TextView
+                        android:id="@+id/search_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
