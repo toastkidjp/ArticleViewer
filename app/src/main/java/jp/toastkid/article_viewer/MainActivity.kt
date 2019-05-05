@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,11 +18,13 @@ import androidx.room.Room
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
+import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
 import jp.toastkid.article_viewer.article.list.Adapter
@@ -34,7 +37,6 @@ import kotlinx.android.synthetic.main.content_main.*
 import okio.Okio
 import timber.log.Timber
 import java.io.File
-import java.util.concurrent.Callable
 
 class MainActivity : AppCompatActivity() {
 
@@ -150,27 +152,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun all() {
-        query(Callable { articleRepository.getAll() })
+        query(
+            Maybe.fromCallable { articleRepository.getAll() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .flatMapObservable { it.toObservable() }
+        )
     }
 
-    private fun search(keyword: String) {
-        query(Callable { articleRepository.search("%$keyword%") })
+    private fun search(keyword: String?) {
+        if (keyword.isNullOrBlank()) {
+            return
+        }
+
+        query(
+            Maybe.fromCallable { articleRepository.getAllWithContent() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .flatMapObservable { it.toObservable() }
+                .filter { filterByKeyword(it, keyword) }
+                .map { it.toSearchResult() }
+        )
     }
 
-    private fun query(callable: Callable<List<SearchResult>>) {
-        adapter.clear()
+    private fun filterByKeyword(article: Article, keyword: String): Boolean {
+        if (article.title.contains(keyword)) {
+            return true
+        }
+        return article.content.contains(keyword)
+    }
 
-        progress.progress = 0
-        progress.visibility = View.VISIBLE
-        progress_circular.visibility = View.VISIBLE
-
-        search_result.setText(R.string.message_search_in_progress)
+    private fun query(results: Observable<SearchResult>) {
+        setSearchStart()
 
         val start = System.currentTimeMillis()
-        Maybe.fromCallable(callable)
-            .subscribeOn(Schedulers.io())
-            .flatMapObservable { it.toObservable() }
-            .observeOn(AndroidSchedulers.mainThread())
+        results
             .subscribe(
                 adapter::add,
                 {
@@ -178,15 +194,33 @@ class MainActivity : AppCompatActivity() {
                     progress.visibility = View.GONE
                     progress_circular.visibility = View.GONE
                 },
-                {
-                    progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
-                    adapter.notifyDataSetChanged()
-                    search_result.also {
-                        it.text = "${adapter.itemCount} Articles / ${System.currentTimeMillis() - start}[ms]"
-                    }
-                }
+                { setSearchEnded(System.currentTimeMillis() - start) }
             )
+            .addTo(disposables)
+    }
+
+    private fun setSearchStart() {
+        adapter.clear()
+
+        progress.progress = 0
+        progress.visibility = View.VISIBLE
+        progress_circular.visibility = View.VISIBLE
+
+        search_result.setText(R.string.message_search_in_progress)
+    }
+
+    @UiThread
+    private fun setSearchEnded(duration: Long) {
+        Completable.fromAction {
+            progress.visibility = View.GONE
+            progress_circular.visibility = View.GONE
+            adapter.notifyDataSetChanged()
+            search_result.also {
+                it.text = "${adapter.itemCount} Articles / $duration[ms]"
+            }
+        }
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe()
             .addTo(disposables)
     }
 

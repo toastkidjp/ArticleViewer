@@ -19,11 +19,11 @@ import jp.toastkid.article_viewer.article.list.SearchResult
 @Dao
 interface ArticleRepository {
 
+    @Query("SELECT * FROM article ORDER BY lastModified DESC LIMIT 500")
+    fun getAllWithContent(): List<Article>
+
     @Query("SELECT title, lastModified, length FROM article ORDER BY lastModified DESC LIMIT 500")
     fun getAll(): List<SearchResult>
-
-    @Query("SELECT title, lastModified, length FROM article WHERE title LIKE :keyword OR content LIKE :keyword ORDER BY title DESC")
-    fun search(keyword: String): List<SearchResult>
 
     @Query("SELECT content FROM article WHERE title = :title LIMIT 1")
     fun findContentByTitle(title: String): String?
