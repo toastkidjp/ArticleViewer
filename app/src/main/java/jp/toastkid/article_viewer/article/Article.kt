@@ -17,9 +17,7 @@ import jp.toastkid.article_viewer.article.list.SearchResult
 @Entity
 class Article {
 
-    @PrimaryKey(autoGenerate = true)
-    var _id: Int = 0
-
+    @PrimaryKey
     var title: String = ""
 
     var content: String = ""
