@@ -2,6 +2,8 @@ package jp.toastkid.article_viewer
 
 import android.Manifest
 import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -31,10 +33,9 @@ import jp.toastkid.article_viewer.article.list.RecyclerViewScroller
 import jp.toastkid.article_viewer.article.list.SearchResult
 import jp.toastkid.article_viewer.article.search.AndKeywordFilter
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
-import jp.toastkid.article_viewer.zip.ZipLoader
+import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import okio.Okio
 import timber.log.Timber
 import java.io.File
 
@@ -45,6 +46,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var preferencesWrapper: PreferencesWrapper
 
     private lateinit var articleRepository: ArticleRepository
+
+    private val progressBroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            hideProgress()
+            all()
+        }
+    }
 
     private val disposables = CompositeDisposable()
 
@@ -72,6 +80,8 @@ class MainActivity : AppCompatActivity() {
         }
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+
+        registerReceiver(progressBroadcastReceiver, ZipLoaderService.makeProgressBroadcastIntentFilter())
 
         val dataBase = Room.databaseBuilder(
             applicationContext,
@@ -120,28 +130,7 @@ class MainActivity : AppCompatActivity() {
         progress.visibility = View.VISIBLE
         progress_circular.visibility = View.VISIBLE
 
-        Completable.fromAction {
-            ZipLoader.invoke(
-                Okio.buffer(Okio.source(file)).inputStream(),
-                articleRepository
-                )
-        }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
-                    preferencesWrapper.setLastUpdated(file.lastModified())
-                    all()
-                },
-                {
-                    Timber.e(it)
-                    progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
-                }
-            )
-            .addTo(disposables)
+        ZipLoaderService.start(this, target)
     }
 
     private fun selectTargetFile() {
@@ -186,8 +175,7 @@ class MainActivity : AppCompatActivity() {
                 adapter::add,
                 {
                     Timber.e(it)
-                    progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
+                    hideProgress()
                 },
                 { setSearchEnded(System.currentTimeMillis() - start) }
             )
@@ -207,8 +195,7 @@ class MainActivity : AppCompatActivity() {
     @UiThread
     private fun setSearchEnded(duration: Long) {
         Completable.fromAction {
-            progress.visibility = View.GONE
-            progress_circular.visibility = View.GONE
+            hideProgress()
             adapter.notifyDataSetChanged()
             search_result.also {
                 it.text = "${adapter.itemCount} Articles / $duration[ms]"
@@ -217,6 +204,11 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe()
             .addTo(disposables)
+    }
+
+    private fun hideProgress() {
+        progress.visibility = View.GONE
+        progress_circular.visibility = View.GONE
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -262,5 +254,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         disposables.clear()
+        unregisterReceiver(progressBroadcastReceiver)
     }
 }
