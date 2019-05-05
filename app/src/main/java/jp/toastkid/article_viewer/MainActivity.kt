@@ -165,22 +165,24 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        val keywords = keyword.replace("　", " ")
+            .split(" ")
+            .filterNot { it.isBlank() }
+            .toSet()
+
         query(
             Maybe.fromCallable { articleRepository.getAllWithContent() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .flatMapObservable { it.toObservable() }
-                .filter { filterByKeyword(it, keyword) }
+                .filter { filterByKeyword(it, keywords) }
                 .map { it.toSearchResult() }
         )
     }
 
-    private fun filterByKeyword(article: Article, keyword: String): Boolean {
-        if (article.title.contains(keyword)) {
-            return true
-        }
-        return article.content.contains(keyword)
-    }
+    private fun filterByKeyword(article: Article, keywords: Set<String>) =
+        keywords.all { article.title.contains(it) }
+                || keywords.all { article.content.contains(it) }
 
     private fun query(results: Observable<SearchResult>) {
         setSearchStart()
