@@ -20,7 +20,7 @@ class Adapter(
     private val onClick: (String) -> Unit
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-    private val items: MutableList<Result> = mutableListOf()
+    private val items: MutableList<SearchResult> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(layoutInflater.inflate(R.layout.item_result, parent, false), onClick)
@@ -36,7 +36,7 @@ class Adapter(
         items.clear()
     }
 
-    fun add(result: Result) {
+    fun add(result: SearchResult) {
         items.add(result)
     }
 }

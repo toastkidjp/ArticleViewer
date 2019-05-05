@@ -22,11 +22,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
-import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
 import jp.toastkid.article_viewer.article.list.Adapter
 import jp.toastkid.article_viewer.article.list.RecyclerViewScroller
+import jp.toastkid.article_viewer.article.list.SearchResult
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoader
 import kotlinx.android.synthetic.main.activity_main.*
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         query(Callable { articleRepository.search("%$keyword%") })
     }
 
-    private fun query(callable: Callable<List<Article>>) {
+    private fun query(callable: Callable<List<SearchResult>>) {
         adapter.clear()
 
         progress.progress = 0
@@ -167,7 +167,6 @@ class MainActivity : AppCompatActivity() {
         Maybe.fromCallable(callable)
             .subscribeOn(Schedulers.io())
             .flatMapObservable { it.toObservable() }
-            .map { it.toResult() }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 adapter::add,

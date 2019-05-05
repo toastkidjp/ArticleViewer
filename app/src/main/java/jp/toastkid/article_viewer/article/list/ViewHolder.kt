@@ -20,7 +20,7 @@ import java.util.*
  */
 class ViewHolder(private val view: View, private val onClick: (String) -> Unit) : RecyclerView.ViewHolder(view) {
 
-    fun bind(result: Result) {
+    fun bind(result: SearchResult) {
         view.findViewById<TextView>(R.id.main_text).text = result.title
         view.setOnClickListener { onClick(result.title) }
         view.findViewById<TextView>(R.id.sub_text).setText(

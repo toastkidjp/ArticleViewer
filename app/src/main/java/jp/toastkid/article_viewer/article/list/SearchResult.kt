@@ -7,7 +7,13 @@
  */
 package jp.toastkid.article_viewer.article.list
 
+import androidx.room.ColumnInfo
+
 /**
  * @author toastkidjp
  */
-data class Result(val title: String, val lastModified: Long, val length: Int)
+data class SearchResult(
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "lastModified") val lastModified: Long,
+    @ColumnInfo(name = "length") val length: Int
+)
