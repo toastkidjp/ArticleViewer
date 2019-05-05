@@ -24,12 +24,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
-import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
 import jp.toastkid.article_viewer.article.list.Adapter
 import jp.toastkid.article_viewer.article.list.RecyclerViewScroller
 import jp.toastkid.article_viewer.article.list.SearchResult
+import jp.toastkid.article_viewer.article.search.AndKeywordFilter
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoader
 import kotlinx.android.synthetic.main.activity_main.*
@@ -165,24 +165,17 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val keywords = keyword.replace("　", " ")
-            .split(" ")
-            .filterNot { it.isBlank() }
-            .toSet()
+        val keywordFilter = AndKeywordFilter(keyword)
 
         query(
             Maybe.fromCallable { articleRepository.getAllWithContent() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .flatMapObservable { it.toObservable() }
-                .filter { filterByKeyword(it, keywords) }
+                .filter { keywordFilter(it) }
                 .map { it.toSearchResult() }
         )
     }
-
-    private fun filterByKeyword(article: Article, keywords: Set<String>) =
-        keywords.all { article.title.contains(it) }
-                || keywords.all { article.content.contains(it) }
 
     private fun query(results: Observable<SearchResult>) {
         setSearchStart()
