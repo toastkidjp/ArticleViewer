@@ -11,17 +11,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import jp.toastkid.article_viewer.R
-import jp.toastkid.article_viewer.article.Article
 
 /**
  * @author toastkidjp
  */
-class Adapter(private val layoutInflater: LayoutInflater) : RecyclerView.Adapter<ViewHolder>() {
+class Adapter(
+    private val layoutInflater: LayoutInflater,
+    private val onClick: (String) -> Unit
+) : RecyclerView.Adapter<ViewHolder>() {
 
-    private val items: MutableList<Article> = mutableListOf()
+    private val items: MutableList<Result> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(layoutInflater.inflate(R.layout.item_result, parent, false))
+        return ViewHolder(layoutInflater.inflate(R.layout.item_result, parent, false), onClick)
     }
 
     override fun getItemCount() = items.size
@@ -30,7 +32,7 @@ class Adapter(private val layoutInflater: LayoutInflater) : RecyclerView.Adapter
         holder.bind(items[position])
     }
 
-    fun replace(results: List<Article>) {
+    fun replace(results: List<Result>) {
         clear()
         items.addAll(results)
         notifyDataSetChanged()
@@ -40,7 +42,7 @@ class Adapter(private val layoutInflater: LayoutInflater) : RecyclerView.Adapter
         items.clear()
     }
 
-    fun add(article: Article) {
-        items.add(article)
+    fun add(result: Result) {
+        items.add(result)
     }
 }

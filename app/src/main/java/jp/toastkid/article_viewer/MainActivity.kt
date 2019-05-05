@@ -20,9 +20,11 @@ import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
+import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
 import jp.toastkid.article_viewer.article.list.Adapter
 import jp.toastkid.article_viewer.article.list.RecyclerViewScroller
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
@@ -51,7 +53,21 @@ class MainActivity : AppCompatActivity() {
 
         preferencesWrapper = PreferencesWrapper(this)
 
-        adapter = Adapter(LayoutInflater.from(this))
+        adapter = Adapter(LayoutInflater.from(this)) { title ->
+            Maybe.fromCallable { articleRepository.findContentByTitle(title) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { content ->
+                        if (content.isNullOrBlank()) {
+                            return@subscribe
+                        }
+                        startActivity(ContentViewerActivity.makeIntent(this, title, content))
+                    },
+                    Timber::e
+                )
+                .addTo(disposables)
+        }
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
@@ -150,17 +166,20 @@ class MainActivity : AppCompatActivity() {
 
         Maybe.fromCallable(callable)
             .subscribeOn(Schedulers.io())
+            .flatMapObservable { it.toObservable() }
+            .map { it.toResult() }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                {
-                    adapter.replace(it)
-                    progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
-                },
+                adapter::add,
                 {
                     Timber.e(it)
                     progress.visibility = View.GONE
                     progress_circular.visibility = View.GONE
+                },
+                {
+                    progress.visibility = View.GONE
+                    progress_circular.visibility = View.GONE
+                    adapter.notifyDataSetChanged()
                 }
             )
             .addTo(disposables)

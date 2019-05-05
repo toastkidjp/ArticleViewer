@@ -24,6 +24,9 @@ interface ArticleRepository {
     @Query("SELECT * FROM article WHERE title LIKE :keyword OR content LIKE :keyword ORDER BY title DESC")
     fun search(keyword: String): List<Article>
 
+    @Query("SELECT content FROM article WHERE title = :title LIMIT 1")
+    fun findContentByTitle(title: String): String?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: Article)
 

@@ -9,6 +9,7 @@ package jp.toastkid.article_viewer.article
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import jp.toastkid.article_viewer.article.list.Result
 
 /**
  * @author toastkidjp
@@ -26,4 +27,6 @@ class Article {
     var lastModified: Long = 0L
 
     var length: Int = 0
+
+    fun toResult() = Result(title, lastModified, length)
 }

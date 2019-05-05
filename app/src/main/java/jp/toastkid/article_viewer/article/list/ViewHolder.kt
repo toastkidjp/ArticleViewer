@@ -11,8 +11,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import jp.toastkid.article_viewer.R
-import jp.toastkid.article_viewer.article.Article
-import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,18 +18,14 @@ import java.util.*
 /**
  * @author toastkidjp
  */
-class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class ViewHolder(private val view: View, private val onClick: (String) -> Unit) : RecyclerView.ViewHolder(view) {
 
-    fun bind(article: Article) {
-        view.findViewById<TextView>(R.id.main_text).text = article.title
-        view.setOnClickListener {
-            view.context?.let {
-                it.startActivity(ContentViewerActivity.makeIntent(it, article.title, article.content))
-            }
-        }
+    fun bind(result: Result) {
+        view.findViewById<TextView>(R.id.main_text).text = result.title
+        view.setOnClickListener { onClick(result.title) }
         view.findViewById<TextView>(R.id.sub_text).setText(
-            "Last updated: ${DATE_FORMAT.get().format(Date().also { it.time = article.lastModified })}" +
-                    " / ${article.length} chars"
+            "Last updated: ${DATE_FORMAT.get().format(Date().also { it.time = result.lastModified })}" +
+                    " / ${result.length} chars"
         )
     }
 
