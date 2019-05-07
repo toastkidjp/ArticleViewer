@@ -71,15 +71,15 @@ class ArticleListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        context?.let {
+            it.registerReceiver(
+                progressBroadcastReceiver,
+                ZipLoaderService.makeProgressBroadcastIntentFilter()
+            )
 
-        val activityContext = context ?: return
-
-        activityContext.registerReceiver(
-            progressBroadcastReceiver,
-            ZipLoaderService.makeProgressBroadcastIntentFilter()
-        )
-
-        initializeRepository(activityContext)
+            initializeRepository(it)
+        }
 
         setHasOptionsMenu(true)
     }
