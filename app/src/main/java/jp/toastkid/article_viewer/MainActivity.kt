@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback {
 
         articleListFragment = ArticleListFragment()
 
-        input.setOnEditorActionListener { textView, i, keyEvent ->
+        input.setOnEditorActionListener { textView, _, _ ->
             articleListFragment.search(textView.text.toString())
             true
         }
