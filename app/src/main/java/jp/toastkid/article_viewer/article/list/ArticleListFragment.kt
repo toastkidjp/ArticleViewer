@@ -79,6 +79,12 @@ class ArticleListFragment : Fragment() {
             ZipLoaderService.makeProgressBroadcastIntentFilter()
         )
 
+        initializeRepository(activityContext)
+
+        setHasOptionsMenu(true)
+    }
+
+    private fun initializeRepository(activityContext: Context) {
         val dataBase = Room.databaseBuilder(
             activityContext.applicationContext,
             AppDatabase::class.java,
@@ -86,8 +92,6 @@ class ArticleListFragment : Fragment() {
         ).build()
 
         articleRepository = dataBase.diaryRepository()
-
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
