@@ -38,8 +38,12 @@ class MainActivity : AppCompatActivity(), ProgressCallback {
             true
         }
 
+        setFragment(articleListFragment)
+    }
+
+    private fun setFragment(fragment: ArticleListFragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.fragment_area, articleListFragment)
+        transaction.replace(R.id.fragment_area, fragment)
         transaction.commit()
     }
 
