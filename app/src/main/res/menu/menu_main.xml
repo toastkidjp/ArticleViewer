@@ -3,23 +3,8 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="jp.toastkid.article_viewer.MainActivity">
 
-    <item android:id="@+id/action_all_article"
-          android:title="@string/action_all_article"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
-
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
-
-    <item android:id="@+id/action_to_top"
-          android:title="@string/action_to_top"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
-
-    <item android:id="@+id/action_to_bottom"
-          android:title="@string/action_to_bottom"
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
