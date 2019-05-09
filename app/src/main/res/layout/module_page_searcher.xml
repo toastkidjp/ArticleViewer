@@ -26,7 +26,7 @@
                 android:inputType="text"
                 android:imeOptions="actionSearch"
                 android:textColor="@android:color/white"
-        />
+                tools:ignore="Autofill,LabelFor"/>
     </com.google.android.material.textfield.TextInputLayout>
     <ImageView
             android:id="@+id/find_close"
