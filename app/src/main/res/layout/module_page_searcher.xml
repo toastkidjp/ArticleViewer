@@ -39,7 +39,7 @@
             android:src="@drawable/ic_close"
             android:background="@drawable/ripple_transparent"
             android:onClick="@{view -> module.hide()}"
-    />
+            android:contentDescription="@string/content_description_close_find_area"/>
     <ImageView
             android:id="@+id/find_clear"
             android:layout_width="32dp"
@@ -51,7 +51,7 @@
             android:src="@drawable/ic_clear_form"
             android:background="@drawable/ripple_transparent"
             android:onClick="@{view -> module.clearInput()}"
-    />
+            android:contentDescription="@string/content_description_clear_input"/>
 
     <ImageView
             android:id="@+id/find_upward"
@@ -64,7 +64,7 @@
             android:src="@drawable/ic_up"
             android:background="@drawable/ripple_transparent"
             android:onClick="@{view -> module.findUp()}"
-    />
+            android:contentDescription="@string/content_description_find_upward"/>
 
     <ImageView
             android:id="@+id/find_downward"
@@ -77,6 +77,6 @@
             android:src="@drawable/ic_down"
             android:background="@drawable/ripple_transparent"
             android:onClick="@{view -> module.findDown()}"
-    />
+            android:contentDescription="@string/content_description_find_downward"/>
 
 </androidx.cardview.widget.CardView>

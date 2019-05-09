@@ -8,4 +8,8 @@
     <string name="action_to_top">↑</string>
     <string name="action_to_bottom">↓</string>
     <string name="message_search_in_progress">Search in progress…</string>
+    <string name="content_description_find_downward">Find downward</string>
+    <string name="content_description_find_upward">Find upward</string>
+    <string name="content_description_clear_input">Clear input</string>
+    <string name="content_description_close_find_area">Close find area</string>
 </resources>
