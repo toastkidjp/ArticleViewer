@@ -7,6 +7,7 @@
  */
 package jp.toastkid.article_viewer.article.list
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,11 +21,12 @@ import java.util.*
  */
 class ViewHolder(private val view: View, private val onClick: (String) -> Unit) : RecyclerView.ViewHolder(view) {
 
+    @SuppressLint("SetTextI18n")
     fun bind(result: SearchResult) {
         view.findViewById<TextView>(R.id.main_text).text = result.title
         view.setOnClickListener { onClick(result.title) }
         view.findViewById<TextView>(R.id.sub_text).text =
-            "Last updated: ${DATE_FORMAT.get().format(Date().also { it.time = result.lastModified })}" +
+            "Last updated: ${DATE_FORMAT.get()?.format(Date().also { it.time = result.lastModified })}" +
                     " / ${result.length} chars"
     }
 
