@@ -55,7 +55,7 @@ object FileExtractorFromUri {
             "com.android.providers.downloads.documents" == uri.authority -> {// DownloadsProvider
                 val id = DocumentsContract.getDocumentId(uri)
                 val contentUri = ContentUris.withAppendedId(
-                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)!!)
+                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
                 return getDataColumn(context, contentUri, null, null)
             }
             "com.android.providers.media.documents" == uri.authority -> {// MediaProvider
