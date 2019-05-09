@@ -41,7 +41,7 @@ class ContentViewerActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        content.setText(intent.getStringExtra("content"))
+        content.text = intent.getStringExtra("content")
         toolbar.title = intent.getStringExtra("title")
 
         initializePageSearcher()
