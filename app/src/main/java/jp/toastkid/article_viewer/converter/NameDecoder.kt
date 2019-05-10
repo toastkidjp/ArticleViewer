@@ -17,22 +17,27 @@ object NameDecoder {
 
     private val charset = Charset.forName("EUC-JP")
 
-    operator fun invoke(byteStr: String): String {
+    operator fun invoke(byteStr: String): String =
+        charset.decode(toByteBuffer(toBiCharacters(byteStr))).toString()
+
+    private fun toBiCharacters(byteStr: String): ArrayList<String> {
+        byteStr.split("??")
         val strings = ArrayList<String>()
         val temp = StringBuilder(5)
-        for (i in 0 until byteStr.length) {
-            temp.append(byteStr.toCharArray()[i])
+        (0 until byteStr.length).forEach {
+            temp.append(byteStr.toCharArray()[it])
             if (temp.length == 2) {
                 strings.add(temp.toString())
-                temp.delete(0, temp.length)
+                temp.clear()
             }
         }
-
-        val b = ByteArray(byteStr.length / 2)
-        for (i in strings.indices) {
-            b[i] = strings[i].toLong(16).toByte()
-        }
-        val byteBuffer = ByteBuffer.wrap(b)
-        return charset.decode(byteBuffer).toString()
+        return strings
     }
+
+    private fun toByteBuffer(strings: List<String>) =
+        ByteBuffer.wrap(
+            strings.indices
+                .map { strings[it].toLong(16).toByte() }
+                .toByteArray()
+        )
 }
