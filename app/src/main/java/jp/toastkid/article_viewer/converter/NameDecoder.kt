@@ -18,19 +18,19 @@ object NameDecoder {
     private val charset = Charset.forName("EUC-JP")
 
     operator fun invoke(byteStr: String): String {
-        val strl = ArrayList<String>()
+        val strings = ArrayList<String>()
         val temp = StringBuilder(5)
         for (i in 0 until byteStr.length) {
             temp.append(byteStr.toCharArray()[i])
             if (temp.length == 2) {
-                strl.add(temp.toString())
+                strings.add(temp.toString())
                 temp.delete(0, temp.length)
             }
         }
 
         val b = ByteArray(byteStr.length / 2)
-        for (i in strl.indices) {
-            b[i] = strl[i].toLong(16).toByte()
+        for (i in strings.indices) {
+            b[i] = strings[i].toLong(16).toByte()
         }
         val byteBuffer = ByteBuffer.wrap(b)
         return charset.decode(byteBuffer).toString()
