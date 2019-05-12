@@ -25,15 +25,11 @@ object FileExtractorFromUri {
      * @param uri [Uri]
      * @return [File] (Nullable)
      */
-    operator fun invoke(context: Context, uri: Uri): String? {
-        if (DocumentsContract.isDocumentUri(context, uri)) {
-            return getForKitKat(context, uri)
-        } else if ("content".equals(uri.scheme, ignoreCase = true)) {
-            return getDataColumn(context, uri, null, null)
-        } else if ("file".equals(uri.scheme, ignoreCase = true)) {
-            return uri.path
-        }
-        return null
+    operator fun invoke(context: Context, uri: Uri): String? = when {
+        DocumentsContract.isDocumentUri(context, uri) -> getForKitKat(context, uri)
+        "content".equals(uri.scheme, ignoreCase = true) -> getDataColumn(context, uri, null, null)
+        "file".equals(uri.scheme, ignoreCase = true) -> uri.path
+        else -> null
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -55,7 +51,7 @@ object FileExtractorFromUri {
             "com.android.providers.downloads.documents" == uri.authority -> {// DownloadsProvider
                 val id = DocumentsContract.getDocumentId(uri)
                 val contentUri = ContentUris.withAppendedId(
-                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)!!)
+                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
                 return getDataColumn(context, contentUri, null, null)
             }
             "com.android.providers.media.documents" == uri.authority -> {// MediaProvider
