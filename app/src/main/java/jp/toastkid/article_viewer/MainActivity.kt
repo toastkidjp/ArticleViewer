@@ -10,10 +10,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import jp.toastkid.article_viewer.article.list.ArticleListFragment
+import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,6 +25,8 @@ import java.io.File
 class MainActivity : AppCompatActivity(), ProgressCallback {
 
     private lateinit var articleListFragment: ArticleListFragment
+
+    private var searchFunction: SearchFunction? = null
 
     private val disposables = CompositeDisposable()
 
@@ -34,17 +38,21 @@ class MainActivity : AppCompatActivity(), ProgressCallback {
         articleListFragment = ArticleListFragment()
 
         input.setOnEditorActionListener { textView, _, _ ->
-            articleListFragment.search(textView.text.toString())
+            searchFunction?.search(textView.text.toString())
             true
         }
 
         setFragment(articleListFragment)
     }
 
-    private fun setFragment(fragment: ArticleListFragment) {
+    private fun setFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_area, fragment)
         transaction.commit()
+
+        if (fragment is SearchFunction) {
+            searchFunction = fragment
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

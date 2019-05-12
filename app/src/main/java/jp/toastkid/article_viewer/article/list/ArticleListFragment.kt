@@ -29,6 +29,7 @@ import jp.toastkid.article_viewer.*
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
 import jp.toastkid.article_viewer.article.search.AndKeywordFilter
+import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.fragment_article_list.*
 import timber.log.Timber
@@ -36,7 +37,7 @@ import timber.log.Timber
 /**
  * @author toastkidjp
  */
-class ArticleListFragment : Fragment() {
+class ArticleListFragment : Fragment(), SearchFunction {
 
     private lateinit var adapter: Adapter
 
@@ -132,7 +133,7 @@ class ArticleListFragment : Fragment() {
         )
     }
 
-    fun search(keyword: String?) {
+    override fun search(keyword: String?) {
         if (keyword.isNullOrBlank()) {
             return
         }
