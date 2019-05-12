@@ -14,17 +14,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import jp.toastkid.article_viewer.ProgressCallback
 import jp.toastkid.article_viewer.R
 import jp.toastkid.article_viewer.common.SearchFunction
 import kotlinx.android.synthetic.main.activity_content.*
-import kotlinx.android.synthetic.main.module_page_searcher.*
 
 /**
  * @author toastkidjp
  */
-class ContentViewerActivity : Fragment(), SearchFunction {
+class ContentViewerFragment : Fragment(), SearchFunction {
 
-    private lateinit var pageSearcher: PageSearcherModule
+    private var progressCallback: ProgressCallback? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        if (context is ProgressCallback) {
+            progressCallback = context
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -35,15 +43,9 @@ class ContentViewerActivity : Fragment(), SearchFunction {
         super.onActivityCreated(savedInstanceState)
 
         content.text = arguments?.getString("content")
-        initializePageSearcher()
-    }
-
-    private fun initializePageSearcher() {
-        pageSearcher = PageSearcherModule(input, content)
-        find_clear.setOnClickListener { pageSearcher.clearInput() }
-        find_close.setOnClickListener { page_searcher.visibility = View.GONE }
-        find_upward.setOnClickListener { pageSearcher.find() }
-        find_downward.setOnClickListener { pageSearcher.find() }
+        arguments?.getString("title")?.also {
+            progressCallback?.setProgressMessage(it)
+        }
     }
 
     override fun search(keyword: String?) {
@@ -51,8 +53,8 @@ class ContentViewerActivity : Fragment(), SearchFunction {
     }
 
     companion object {
-        fun make(context: Context, title: String, content: String): Fragment
-                = ContentViewerActivity().also {
+        fun make(title: String, content: String): Fragment
+                = ContentViewerFragment().also {
                     it.arguments = bundleOf(
                         "content" to content,
                         "title" to title

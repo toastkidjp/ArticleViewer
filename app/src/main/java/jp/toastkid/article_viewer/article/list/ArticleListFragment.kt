@@ -27,8 +27,9 @@ import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.*
 import jp.toastkid.article_viewer.article.ArticleRepository
-import jp.toastkid.article_viewer.article.detail.ContentViewerActivity
+import jp.toastkid.article_viewer.article.detail.ContentViewerFragment
 import jp.toastkid.article_viewer.article.search.AndKeywordFilter
+import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.fragment_article_list.*
@@ -54,6 +55,8 @@ class ArticleListFragment : Fragment(), SearchFunction {
 
     private lateinit var progressCallback: ProgressCallback
 
+    private var fragmentControl: FragmentControl? = null
+
     private val disposables = CompositeDisposable()
 
     override fun onAttach(context: Context?) {
@@ -68,11 +71,15 @@ class ArticleListFragment : Fragment(), SearchFunction {
         if (context is ProgressCallback) {
             progressCallback = context
         }
+
+        if (context is FragmentControl) {
+            fragmentControl = context
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         context?.let {
             it.registerReceiver(
                 progressBroadcastReceiver,
@@ -114,7 +121,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
                         if (content.isNullOrBlank()) {
                             return@subscribe
                         }
-                        startActivity(ContentViewerActivity.makeIntent(activityContext, title, content))
+                        fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
                     },
                     Timber::e
                 )

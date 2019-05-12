@@ -15,6 +15,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import jp.toastkid.article_viewer.article.list.ArticleListFragment
+import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoaderService
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import java.io.File
 
-class MainActivity : AppCompatActivity(), ProgressCallback {
+class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
 
     private lateinit var articleListFragment: ArticleListFragment
 
@@ -48,8 +49,13 @@ class MainActivity : AppCompatActivity(), ProgressCallback {
     private fun setFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_area, fragment)
+        transaction.addToBackStack(fragment::class.java.canonicalName)
         transaction.commit()
 
+        extractSearchFunction(fragment)
+    }
+
+    private fun extractSearchFunction(fragment: Fragment) {
         if (fragment is SearchFunction) {
             searchFunction = fragment
         }
@@ -118,6 +124,13 @@ class MainActivity : AppCompatActivity(), ProgressCallback {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            finish()
+        }
+    }
+
     override fun showProgress() {
         progress.progress = 0
         progress.visibility = View.VISIBLE
@@ -131,6 +144,15 @@ class MainActivity : AppCompatActivity(), ProgressCallback {
 
     override fun setProgressMessage(message: String) {
         search_result.also { it.text = message }
+    }
+
+    override fun addFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.fragment_area, fragment)
+        transaction.addToBackStack(fragment::class.java.canonicalName)
+        transaction.commit()
+
+        extractSearchFunction(fragment)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
