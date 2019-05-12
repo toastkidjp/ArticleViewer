@@ -8,42 +8,33 @@
 package jp.toastkid.article_viewer.article.detail
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import jp.toastkid.article_viewer.R
+import jp.toastkid.article_viewer.common.SearchFunction
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.module_page_searcher.*
 
 /**
  * @author toastkidjp
  */
-class ContentViewerActivity : AppCompatActivity() {
+class ContentViewerActivity : Fragment(), SearchFunction {
 
     private lateinit var pageSearcher: PageSearcherModule
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_content)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.activity_content, container, false)
+    }
 
-        toolbar.inflateMenu(R.menu.menu_content_viewer)
-        toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_close -> {
-                    finish()
-                    true
-                }
-                R.id.action_find -> {
-                    page_searcher.visibility = View.VISIBLE
-                    true
-                }
-                else -> false
-            }
-        }
-        content.text = intent.getStringExtra("content")
-        toolbar.title = intent.getStringExtra("title")
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
+        content.text = arguments?.getString("content")
         initializePageSearcher()
     }
 
@@ -55,12 +46,17 @@ class ContentViewerActivity : AppCompatActivity() {
         find_downward.setOnClickListener { pageSearcher.find() }
     }
 
+    override fun search(keyword: String?) {
+        TextViewHighlighter(content, keyword.toString())
+    }
+
     companion object {
-        fun makeIntent(context: Context, title: String, content: String) =
-            Intent(context, ContentViewerActivity::class.java)
-                .also {
-                    it.putExtra("title", title)
-                    it.putExtra("content", content)
+        fun make(context: Context, title: String, content: String): Fragment
+                = ContentViewerActivity().also {
+                    it.arguments = bundleOf(
+                        "content" to content,
+                        "title" to title
+                    )
                 }
     }
 }
