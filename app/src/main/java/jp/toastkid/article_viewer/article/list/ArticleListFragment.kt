@@ -30,6 +30,7 @@ import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerFragment
 import jp.toastkid.article_viewer.article.search.AndKeywordFilter
 import jp.toastkid.article_viewer.common.FragmentControl
+import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.fragment_article_list.*

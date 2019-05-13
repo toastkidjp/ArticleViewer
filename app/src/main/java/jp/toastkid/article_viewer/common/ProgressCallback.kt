@@ -5,7 +5,7 @@
  * which accompany this distribution.
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html.
  */
-package jp.toastkid.article_viewer
+package jp.toastkid.article_viewer.common
 
 /**
  * @author toastkidjp

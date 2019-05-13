@@ -16,6 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import jp.toastkid.article_viewer.article.list.ArticleListFragment
 import jp.toastkid.article_viewer.common.FragmentControl
+import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoaderService
