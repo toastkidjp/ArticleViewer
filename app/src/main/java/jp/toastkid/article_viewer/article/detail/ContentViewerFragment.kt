@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import jp.toastkid.article_viewer.ProgressCallback
 import jp.toastkid.article_viewer.R
 import jp.toastkid.article_viewer.common.SearchFunction
-import kotlinx.android.synthetic.main.activity_content.*
+import kotlinx.android.synthetic.main.fragment_content.*
 
 /**
  * @author toastkidjp
@@ -36,7 +36,7 @@ class ContentViewerFragment : Fragment(), SearchFunction {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        return inflater.inflate(R.layout.activity_content, container, false)
+        return inflater.inflate(R.layout.fragment_content, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
