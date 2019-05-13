@@ -40,7 +40,11 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         articleListFragment = ArticleListFragment()
 
         input.setOnEditorActionListener { textView, _, _ ->
-            searchFunction?.search(textView.text.toString())
+            val keyword = textView.text.toString()
+            if (keyword.isBlank()) {
+                return@setOnEditorActionListener true
+            }
+            searchFunction?.search(keyword)
             true
         }
 
