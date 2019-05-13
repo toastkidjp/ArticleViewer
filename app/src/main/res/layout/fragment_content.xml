@@ -5,6 +5,7 @@
         android:id="@+id/content_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <TextView
@@ -13,7 +14,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            android:background="@android:color/white"
             android:textSize="14sp"
             android:textIsSelectable="true"
             android:autoLink="web"
