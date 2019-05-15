@@ -14,8 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.R
+import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
 import kotlinx.android.synthetic.main.fragment_content.*
 
@@ -51,6 +51,8 @@ class ContentViewerFragment : Fragment(), SearchFunction {
     override fun search(keyword: String?) {
         TextViewHighlighter(content, keyword.toString())
     }
+
+    override fun filter(keyword: String?) = Unit
 
     companion object {
         fun make(title: String, content: String): Fragment

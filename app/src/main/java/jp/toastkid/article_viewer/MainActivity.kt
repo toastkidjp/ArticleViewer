@@ -4,7 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.subjects.PublishSubject
 import jp.toastkid.article_viewer.article.list.ArticleListFragment
 import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.ProgressCallback
@@ -23,12 +27,15 @@ import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
 
     private lateinit var articleListFragment: ArticleListFragment
 
     private var searchFunction: SearchFunction? = null
+
+    private val inputSubject = PublishSubject.create<String>()
 
     private val disposables = CompositeDisposable()
 
@@ -47,6 +54,23 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             searchFunction?.search(keyword)
             true
         }
+
+        input.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) = Unit
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+
+            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                inputSubject.onNext(charSequence.toString())
+            }
+
+        })
+
+        inputSubject.distinctUntilChanged()
+            .debounce(500L, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { searchFunction?.filter(it) }
+            .addTo(disposables)
 
         setFragment(articleListFragment)
     }

@@ -25,7 +25,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
-import jp.toastkid.article_viewer.*
+import jp.toastkid.article_viewer.AppDatabase
+import jp.toastkid.article_viewer.BuildConfig
+import jp.toastkid.article_viewer.PreferencesWrapper
+import jp.toastkid.article_viewer.R
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerFragment
 import jp.toastkid.article_viewer.article.search.AndKeywordFilter
@@ -155,6 +158,20 @@ class ArticleListFragment : Fragment(), SearchFunction {
                 .flatMapObservable { it.toObservable() }
                 .filter { keywordFilter(it) }
                 .map { it.toSearchResult() }
+        )
+    }
+
+    override fun filter(keyword: String?) {
+        if (keyword.isNullOrBlank()) {
+            all()
+            return
+        }
+
+        query(
+            Maybe.fromCallable { articleRepository.filter("%$keyword%") }
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .flatMapObservable { it.toObservable() }
         )
     }
 
