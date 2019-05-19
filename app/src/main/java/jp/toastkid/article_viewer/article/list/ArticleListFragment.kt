@@ -162,6 +162,10 @@ class ArticleListFragment : Fragment(), SearchFunction {
     }
 
     override fun filter(keyword: String?) {
+        if (!preferencesWrapper.useTitleFilter()) {
+            return
+        }
+
         if (keyword.isNullOrBlank()) {
             all()
             return
@@ -212,6 +216,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
     override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menuInflater?.inflate(R.menu.menu_article_list, menu)
+        menu?.findItem(R.id.action_switch_title_filter)?.isChecked = preferencesWrapper.useTitleFilter()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -226,6 +231,12 @@ class ArticleListFragment : Fragment(), SearchFunction {
             }
             R.id.action_to_bottom -> {
                 RecyclerViewScroller.toBottom(results)
+                true
+            }
+            R.id.action_switch_title_filter -> {
+                val newState = !item.isChecked
+                preferencesWrapper.switchUseTitleFilter(newState)
+                item.isChecked = newState
                 true
             }
             else -> super.onOptionsItemSelected(item)

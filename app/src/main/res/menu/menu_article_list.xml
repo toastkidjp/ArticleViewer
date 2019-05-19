@@ -18,4 +18,11 @@
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
+    <item android:id="@+id/action_switch_title_filter"
+          android:title="@string/action_switch_title_filter"
+          android:orderInCategory="100"
+          android:checkable="true"
+          android:checked="true"
+          app:showAsAction="never"/>
+
 </menu>
