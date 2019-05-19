@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         })
 
         inputSubject.distinctUntilChanged()
-            .debounce(500L, TimeUnit.MILLISECONDS)
+            .debounce(1400L, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { searchFunction?.filter(it) }
             .addTo(disposables)
