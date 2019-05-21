@@ -242,11 +242,11 @@ class ArticleListFragment : Fragment(), SearchFunction {
                     .addTo(disposables)
                 true
             }
-            R.id.action_to_top -> {
+            R.id.action_to_top_content -> {
                 RecyclerViewScroller.toTop(results)
                 true
             }
-            R.id.action_to_bottom -> {
+            R.id.action_to_bottom_content -> {
                 RecyclerViewScroller.toBottom(results)
                 true
             }

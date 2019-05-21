@@ -13,12 +13,12 @@
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
-    <item android:id="@+id/action_to_top"
+    <item android:id="@+id/action_to_top_content"
           android:title="@string/action_to_top"
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
-    <item android:id="@+id/action_to_bottom"
+    <item android:id="@+id/action_to_bottom_content"
           android:title="@string/action_to_bottom"
           android:orderInCategory="100"
           app:showAsAction="never"/>
