@@ -13,4 +13,6 @@ package jp.toastkid.article_viewer.common
 interface SearchFunction {
 
     fun search(keyword: String?)
+
+    fun filter(keyword: String?)
 }

@@ -12,4 +12,5 @@
     <string name="content_description_find_upward">Find upward</string>
     <string name="content_description_clear_input">Clear input</string>
     <string name="content_description_close_find_area">Close find area</string>
+    <string name="action_switch_title_filter">Use title filter</string>
 </resources>

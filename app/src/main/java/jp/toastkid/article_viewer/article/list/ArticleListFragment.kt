@@ -25,7 +25,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
-import jp.toastkid.article_viewer.*
+import jp.toastkid.article_viewer.AppDatabase
+import jp.toastkid.article_viewer.BuildConfig
+import jp.toastkid.article_viewer.PreferencesWrapper
+import jp.toastkid.article_viewer.R
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerFragment
 import jp.toastkid.article_viewer.article.search.AndKeywordFilter
@@ -158,6 +161,24 @@ class ArticleListFragment : Fragment(), SearchFunction {
         )
     }
 
+    override fun filter(keyword: String?) {
+        if (!preferencesWrapper.useTitleFilter()) {
+            return
+        }
+
+        if (keyword.isNullOrBlank()) {
+            all()
+            return
+        }
+
+        query(
+            Maybe.fromCallable { articleRepository.filter("%$keyword%") }
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .flatMapObservable { it.toObservable() }
+        )
+    }
+
     private fun query(results: Observable<SearchResult>) {
         adapter.clear()
         setSearchStart()
@@ -195,6 +216,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
     override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menuInflater?.inflate(R.menu.menu_article_list, menu)
+        menu?.findItem(R.id.action_switch_title_filter)?.isChecked = preferencesWrapper.useTitleFilter()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -209,6 +231,12 @@ class ArticleListFragment : Fragment(), SearchFunction {
             }
             R.id.action_to_bottom -> {
                 RecyclerViewScroller.toBottom(results)
+                true
+            }
+            R.id.action_switch_title_filter -> {
+                val newState = !item.isChecked
+                preferencesWrapper.switchUseTitleFilter(newState)
+                item.isChecked = newState
                 true
             }
             else -> super.onOptionsItemSelected(item)

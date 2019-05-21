@@ -19,7 +19,7 @@ class PreferencesWrapper(context: Context) {
      * TODO Divide and move package.
      */
     private enum class Key {
-        FILE_PATH, LAST_UPDATED
+        FILE_PATH, LAST_UPDATED, USE_TITLE_FILTER
     }
 
     private val preferences: SharedPreferences =
@@ -44,5 +44,13 @@ class PreferencesWrapper(context: Context) {
 
     fun getLastUpdated(): Long {
         return preferences.getLong(Key.LAST_UPDATED.name, 0L)
+    }
+
+    fun switchUseTitleFilter(checked: Boolean) {
+        preferences.edit().putBoolean(Key.USE_TITLE_FILTER.name, checked).apply()
+    }
+
+    fun useTitleFilter(): Boolean {
+        return preferences.getBoolean(Key.USE_TITLE_FILTER.name, true)
     }
 }
