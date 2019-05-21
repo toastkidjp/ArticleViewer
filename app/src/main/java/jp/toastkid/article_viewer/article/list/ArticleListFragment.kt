@@ -227,6 +227,21 @@ class ArticleListFragment : Fragment(), SearchFunction {
                 all()
                 true
             }
+            R.id.action_random_article -> {
+                Maybe.fromCallable {
+                    val titles = articleRepository.getAllTitles()
+                    val title = titles[(titles.size * Math.random()).toInt()]
+                    val content = articleRepository.findContentByTitle(title)
+                    return@fromCallable title to content
+                }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { openArticle(it.first, it.second) },
+                        Timber::e
+                    )
+                    .addTo(disposables)
+                true
+            }
             R.id.action_to_top -> {
                 RecyclerViewScroller.toTop(results)
                 true
