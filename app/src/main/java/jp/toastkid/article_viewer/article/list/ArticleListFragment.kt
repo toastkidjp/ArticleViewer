@@ -121,18 +121,20 @@ class ArticleListFragment : Fragment(), SearchFunction {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { content ->
-                        if (content.isNullOrBlank()) {
-                            return@subscribe
-                        }
-                        fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
-                    },
+                    { content -> openArticle(title, content) },
                     Timber::e
                 )
                 .addTo(disposables)
         }
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
+    }
+
+    private fun openArticle(title: String, content: String?) {
+        if (content.isNullOrBlank()) {
+            return
+        }
+        fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
     }
 
     fun all() {
