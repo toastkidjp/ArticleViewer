@@ -41,8 +41,8 @@ class ContentViewerFragment : Fragment(), SearchFunction {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        content.text = arguments?.getString("content")
-        arguments?.getString("title")?.also {
+        content.text = arguments?.getString(KEY_CONTENT)
+        arguments?.getString(KEY_TITLE)?.also {
             progressCallback?.setProgressMessage(it)
         }
     }
@@ -70,11 +70,15 @@ class ContentViewerFragment : Fragment(), SearchFunction {
     override fun filter(keyword: String?) = Unit
 
     companion object {
+        private const val KEY_CONTENT = "content"
+
+        private const val KEY_TITLE = "title"
+
         fun make(title: String, content: String): Fragment
                 = ContentViewerFragment().also {
                     it.arguments = bundleOf(
-                        "content" to content,
-                        "title" to title
+                        KEY_CONTENT to content,
+                        KEY_TITLE to title
                     )
                 }
     }
