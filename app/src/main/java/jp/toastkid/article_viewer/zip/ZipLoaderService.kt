@@ -56,9 +56,7 @@ class ZipLoaderService : JobIntentService() {
                     progressIntent.putExtra("progress", 100)
                     sendBroadcast(progressIntent)
                 },
-                {
-                    Timber.e(it)
-                }
+                Timber::e
             )
     }
 
