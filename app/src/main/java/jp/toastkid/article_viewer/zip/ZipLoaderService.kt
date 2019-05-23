@@ -52,17 +52,12 @@ class ZipLoaderService : JobIntentService() {
             .subscribe(
                 {
                     PreferencesWrapper(this).setLastUpdated(file.lastModified())
-                    /*progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
-                    all()*/
                     val progressIntent = Intent(ACTION_PROGRESS_BROADCAST)
                     progressIntent.putExtra("progress", 100)
                     sendBroadcast(progressIntent)
                 },
                 {
                     Timber.e(it)
-                    /*progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE*/
                 }
             )
     }
