@@ -33,7 +33,7 @@ object ZipLoader {
                         continue
                     }
                     Okio.buffer(Okio.source(zipInputStream))
-                        .also { articleRepository.insert(makeArticle(it, nextEntry)) }
+                        .use { articleRepository.insert(makeArticle(it, nextEntry)) }
                     nextEntry = try {
                         zipInputStream.nextEntry
                     } catch (e: IllegalArgumentException) {
