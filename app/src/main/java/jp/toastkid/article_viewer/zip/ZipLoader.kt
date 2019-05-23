@@ -23,7 +23,7 @@ object ZipLoader {
     operator fun invoke(
         inputStream: InputStream,
         articleRepository: ArticleRepository
-        ) {
+    ) {
         ZipInputStream(inputStream, CHARSET)
             .also { zipInputStream ->
                 var nextEntry = zipInputStream.nextEntry
