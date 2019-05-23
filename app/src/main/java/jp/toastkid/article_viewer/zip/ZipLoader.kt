@@ -14,12 +14,23 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 /**
+ * Load articles from zip file.
+ *
  * @author toastkidjp
  */
 object ZipLoader {
 
+    /**
+     * Title character set.
+     */
     private val CHARSET = Charset.forName("UTF-8")
 
+    /**
+     * Load file from zip.
+     *
+     * @param inputStream [InputStream]
+     * @param articleRepository [ArticleRepository]
+     */
     operator fun invoke(
         inputStream: InputStream,
         articleRepository: ArticleRepository
@@ -46,6 +57,12 @@ object ZipLoader {
             }
     }
 
+    /**
+     * Make article.
+     *
+     * @param it [BufferedSource]
+     * @param nextEntry [ZipEntry]
+     */
     private fun makeArticle(
         it: BufferedSource,
         nextEntry: ZipEntry
