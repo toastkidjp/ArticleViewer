@@ -66,9 +66,11 @@ class ZipLoaderService : JobIntentService() {
 
         fun makeProgressBroadcastIntentFilter() = IntentFilter(ACTION_PROGRESS_BROADCAST)
 
+        private const val KEY_TARGET = "target"
+
         fun start(context: Context, target: String) {
             val intent = Intent(context, ZipLoaderService::class.java)
-            intent.putExtra("target", target)
+            intent.putExtra(KEY_TARGET, target)
             enqueueWork(context, ZipLoaderService::class.java, 20, intent)
         }
     }
