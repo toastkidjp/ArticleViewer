@@ -51,7 +51,10 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             if (keyword.isBlank()) {
                 return@setOnEditorActionListener true
             }
-            searchFunction?.search(keyword)
+            val currentFragment = supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1]
+            if (currentFragment is SearchFunction) {
+                currentFragment.search(keyword)
+            }
             true
         }
 
