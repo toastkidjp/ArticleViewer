@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             if (keyword.isBlank()) {
                 return@setOnEditorActionListener true
             }
-            val currentFragment = supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1]
+            val currentFragment = getCurrentFragment()
             if (currentFragment is SearchFunction) {
                 currentFragment.search(keyword)
             }
@@ -76,6 +76,11 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             .addTo(disposables)
 
         setFragment(articleListFragment)
+    }
+
+    private fun getCurrentFragment(): Fragment {
+        val supportFragmentManager = supportFragmentManager
+        return supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1]
     }
 
     private fun setFragment(fragment: Fragment) {
