@@ -61,7 +61,7 @@ class CalendarFragment : Fragment() {
         articleRepository = dataBase.diaryRepository()
 
         calendar.setOnDateChangeListener { _, year, month, date ->
-            Maybe.fromCallable { articleRepository.findFirst(makeFilterQuery(year, month, date)) }
+            Maybe.fromCallable { articleRepository.findFirst(TitleFilterGenerator(year, month, date)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -73,12 +73,6 @@ class CalendarFragment : Fragment() {
                 )
                 .addTo(disposables)
         }
-    }
-
-    private fun makeFilterQuery(year: Int, month: Int, date: Int): String {
-        val monthStr = (month + 1).let { if (it < 10) "0$it" else it.toString() }
-        val dateStr = if (date < 10) "0$date" else date.toString()
-        return "日記$year-$monthStr-$dateStr%"
     }
 
 }
