@@ -61,7 +61,7 @@ class CalendarFragment : Fragment() {
         articleRepository = dataBase.diaryRepository()
 
         calendar.setOnDateChangeListener { _, year, month, date ->
-            Maybe.fromCallable { articleRepository.findFirst(TitleFilterGenerator(year, month, date)) }
+            Maybe.fromCallable { articleRepository.findFirst(TitleFilterGenerator(year, month + 1, date)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
