@@ -84,4 +84,9 @@ class CalendarFragment : Fragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        disposables.clear()
+    }
+
 }
