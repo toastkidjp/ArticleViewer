@@ -12,4 +12,9 @@
           android:title="@string/action_set_target"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/action_calendar"
+          android:title="@string/action_calendar"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
 </menu>

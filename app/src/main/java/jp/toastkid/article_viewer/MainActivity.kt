@@ -19,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
 import jp.toastkid.article_viewer.article.list.ArticleListFragment
+import jp.toastkid.article_viewer.calendar.CalendarFragment
 import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
@@ -32,6 +33,8 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
 
     private lateinit var articleListFragment: ArticleListFragment
+
+    private lateinit var calendarFragment: CalendarFragment
 
     private var searchFunction: SearchFunction? = null
 
@@ -147,6 +150,13 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             R.id.action_settings -> true
             R.id.action_set_target -> {
                 selectTargetFile()
+                return true
+            }
+            R.id.action_calendar -> {
+                if (!::calendarFragment.isInitialized) {
+                    calendarFragment = CalendarFragment()
+                }
+                addFragment(calendarFragment)
                 return true
             }
             else -> super.onOptionsItemSelected(item)

@@ -31,6 +31,9 @@ interface ArticleRepository {
     @Query("SELECT content FROM article WHERE title = :title LIMIT 1")
     fun findContentByTitle(title: String): String?
 
+    @Query("SELECT * FROM article WHERE title LIKE :title LIMIT 1")
+    fun findFirst(title: String): Article?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: Article)
 
