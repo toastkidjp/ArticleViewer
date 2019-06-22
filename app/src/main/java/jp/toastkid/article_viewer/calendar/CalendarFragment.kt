@@ -7,6 +7,7 @@
  */
 package jp.toastkid.article_viewer.calendar
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +53,12 @@ class CalendarFragment : Fragment() {
             fragmentControl = activityContext
         }
 
+        initializeRepository(activityContext)
+
+        setSelectedAction()
+    }
+
+    private fun initializeRepository(activityContext: Context) {
         val dataBase = Room.databaseBuilder(
             activityContext.applicationContext,
             AppDatabase::class.java,
@@ -59,7 +66,9 @@ class CalendarFragment : Fragment() {
         ).build()
 
         articleRepository = dataBase.diaryRepository()
+    }
 
+    private fun setSelectedAction() {
         calendar.setOnDateChangeListener { _, year, month, date ->
             Maybe.fromCallable { articleRepository.findFirst(TitleFilterGenerator(year, month + 1, date)) }
                 .subscribeOn(Schedulers.io())
