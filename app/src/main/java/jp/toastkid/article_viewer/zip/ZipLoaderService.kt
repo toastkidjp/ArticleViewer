@@ -37,7 +37,7 @@ class ZipLoaderService : JobIntentService() {
             BuildConfig.APPLICATION_ID
         ).build()
 
-        val articleRepository = dataBase.diaryRepository()
+        val articleRepository = dataBase.articleRepository()
 
         val file = File(FileExtractorFromUri(this, intent.getStringExtra("target").toUri()))
 

@@ -103,7 +103,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
             BuildConfig.APPLICATION_ID
         ).build()
 
-        articleRepository = dataBase.diaryRepository()
+        articleRepository = dataBase.articleRepository()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
