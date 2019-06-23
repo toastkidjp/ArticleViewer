@@ -19,12 +19,20 @@ import java.util.*
 /**
  * @author toastkidjp
  */
-class ViewHolder(private val view: View, private val onClick: (String) -> Unit) : RecyclerView.ViewHolder(view) {
+class ViewHolder(
+    private val view: View,
+    private val onClick: (String) -> Unit,
+    private val onLongClick: (String) -> Unit
+) : RecyclerView.ViewHolder(view) {
 
     @SuppressLint("SetTextI18n")
     fun bind(result: SearchResult) {
         view.findViewById<TextView>(R.id.main_text).text = result.title
         view.setOnClickListener { onClick(result.title) }
+        view.setOnLongClickListener {
+            onLongClick(result.title)
+            true
+        }
         view.findViewById<TextView>(R.id.sub_text).text =
             "Last updated: ${DATE_FORMAT.get()?.format(Date().also { it.time = result.lastModified })}" +
                     " / ${result.length} chars"

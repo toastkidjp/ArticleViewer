@@ -17,13 +17,18 @@ import jp.toastkid.article_viewer.R
  */
 class Adapter(
     private val layoutInflater: LayoutInflater,
-    private val onClick: (String) -> Unit
+    private val onClick: (String) -> Unit,
+    private val onLongClick: (String) -> Unit
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     private val items: MutableList<SearchResult> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(layoutInflater.inflate(R.layout.item_result, parent, false), onClick)
+        return ViewHolder(
+            layoutInflater.inflate(R.layout.item_result, parent, false),
+            onClick,
+            onLongClick
+        )
     }
 
     override fun getItemCount() = items.size
