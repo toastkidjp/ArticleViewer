@@ -121,18 +121,20 @@ class ArticleListFragment : Fragment(), SearchFunction {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { content ->
-                        if (content.isNullOrBlank()) {
-                            return@subscribe
-                        }
-                        fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
-                    },
+                    { content -> openArticle(title, content) },
                     Timber::e
                 )
                 .addTo(disposables)
         }
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
+    }
+
+    private fun openArticle(title: String, content: String?) {
+        if (content.isNullOrBlank()) {
+            return
+        }
+        fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
     }
 
     fun all() {
@@ -223,6 +225,21 @@ class ArticleListFragment : Fragment(), SearchFunction {
         return when (item.itemId) {
             R.id.action_all_article -> {
                 all()
+                true
+            }
+            R.id.action_random_article -> {
+                Maybe.fromCallable {
+                    val titles = articleRepository.getAllTitles()
+                    val title = titles[(titles.size * Math.random()).toInt()]
+                    val content = articleRepository.findContentByTitle(title)
+                    return@fromCallable title to content
+                }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { openArticle(it.first, it.second) },
+                        Timber::e
+                    )
+                    .addTo(disposables)
                 true
             }
             R.id.action_to_top -> {
