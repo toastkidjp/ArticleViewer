@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
 
     private lateinit var articleListFragment: ArticleListFragment
 
-    private var searchFunction: SearchFunction? = null
-
     private val inputSubject = PublishSubject.create<String>()
 
     private val disposables = CompositeDisposable()
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             if (keyword.isBlank()) {
                 return@setOnEditorActionListener true
             }
-            searchFunction?.search(keyword)
+            getCurrentSearchFunction()?.search(keyword)
             true
         }
 
@@ -69,10 +67,16 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         inputSubject.distinctUntilChanged()
             .debounce(1400L, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { searchFunction?.filter(it) }
+            .subscribe { getCurrentSearchFunction()?.filter(it) }
             .addTo(disposables)
 
         setFragment(articleListFragment)
+    }
+
+    private fun getCurrentSearchFunction(): SearchFunction? {
+        val supportFragmentManager = supportFragmentManager ?: return null
+        val fragment = supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1]
+        return if (fragment is SearchFunction) fragment else null
     }
 
     private fun setFragment(fragment: Fragment) {
@@ -80,14 +84,6 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         transaction.replace(R.id.fragment_area, fragment)
         transaction.addToBackStack(fragment::class.java.canonicalName)
         transaction.commit()
-
-        extractSearchFunction(fragment)
-    }
-
-    private fun extractSearchFunction(fragment: Fragment) {
-        if (fragment is SearchFunction) {
-            searchFunction = fragment
-        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -180,8 +176,6 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         transaction.add(R.id.fragment_area, fragment)
         transaction.addToBackStack(fragment::class.java.canonicalName)
         transaction.commit()
-
-        extractSearchFunction(fragment)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
