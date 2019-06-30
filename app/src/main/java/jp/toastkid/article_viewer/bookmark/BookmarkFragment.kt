@@ -119,24 +119,22 @@ class BookmarkFragment : Fragment() {
         menu?.findItem(R.id.action_switch_title_filter)?.isChecked = preferencesWrapper.useTitleFilter()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_to_top -> {
-                RecyclerViewScroller.toTop(results)
-                true
-            }
-            R.id.action_to_bottom -> {
-                RecyclerViewScroller.toBottom(results)
-                true
-            }
-            R.id.action_switch_title_filter -> {
-                val newState = !item.isChecked
-                preferencesWrapper.switchUseTitleFilter(newState)
-                item.isChecked = newState
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_to_top -> {
+            RecyclerViewScroller.toTop(results)
+            true
         }
+        R.id.action_to_bottom -> {
+            RecyclerViewScroller.toBottom(results)
+            true
+        }
+        R.id.action_switch_title_filter -> {
+            val newState = !item.isChecked
+            preferencesWrapper.switchUseTitleFilter(newState)
+            item.isChecked = newState
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
