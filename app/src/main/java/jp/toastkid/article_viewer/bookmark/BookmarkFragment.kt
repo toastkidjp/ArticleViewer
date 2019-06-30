@@ -84,6 +84,11 @@ class BookmarkFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
+    /**
+     * Initialize repository.
+     *
+     * @param activityContext [Context]
+     */
     private fun initializeRepository(activityContext: Context) {
         val dataBase = Room.databaseBuilder(
             activityContext.applicationContext,
