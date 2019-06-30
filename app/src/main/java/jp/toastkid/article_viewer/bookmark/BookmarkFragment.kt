@@ -37,14 +37,29 @@ import timber.log.Timber
  */
 class BookmarkFragment : Fragment() {
 
+    /**
+     * [RecyclerView]'s adapter.
+     */
     private lateinit var adapter: Adapter
 
+    /**
+     * Preferences wrapper.
+     */
     private lateinit var preferencesWrapper: PreferencesWrapper
 
+    /**
+     * Use for reading article data from DB.
+     */
     private lateinit var articleRepository: ArticleRepository
 
+    /**
+     * Use for switching fragments.
+     */
     private var fragmentControl: FragmentControl? = null
 
+    /**
+     * Use for clean up subscriptions.
+     */
     private val disposables = CompositeDisposable()
 
     override fun onAttach(context: Context?) {
