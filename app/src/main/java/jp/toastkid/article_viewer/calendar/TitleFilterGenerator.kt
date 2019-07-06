@@ -9,7 +9,7 @@ object TitleFilterGenerator {
 
     /**
      * Make filtering query with year, month, and date.
-     * 
+     *
      * @param year ex) 2019
      * @param month You should specify 1-12
      * @param date You should specify 1-31
