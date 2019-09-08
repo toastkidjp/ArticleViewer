@@ -80,16 +80,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             .subscribe { searchFunction?.filter(it) }
             .addTo(disposables)
 
-        setFragment(articleListFragment)
-    }
-
-    private fun setFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_area, fragment)
-        transaction.addToBackStack(fragment::class.java.canonicalName)
-        transaction.commit()
-
-        extractSearchFunction(fragment)
+        addFragment(articleListFragment)
     }
 
     private fun extractSearchFunction(fragment: Fragment) {
@@ -204,7 +195,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
 
     override fun addFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.fragment_area, fragment)
+        transaction.replace(R.id.fragment_area, fragment)
         transaction.addToBackStack(fragment::class.java.canonicalName)
         transaction.commit()
 
