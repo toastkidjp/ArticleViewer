@@ -14,5 +14,5 @@ import androidx.fragment.app.Fragment
  */
 interface FragmentControl {
 
-    fun addFragment(fragment: Fragment)
+    fun replaceFragment(fragment: Fragment)
 }

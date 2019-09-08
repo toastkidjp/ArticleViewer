@@ -76,7 +76,7 @@ class CalendarFragment : Fragment() {
                 .subscribe(
                     {
                         val article = it ?: return@subscribe
-                        fragmentControl.addFragment(ContentViewerFragment.make(article.title, article.content))
+                        fragmentControl.replaceFragment(ContentViewerFragment.make(article.title, article.content))
                     },
                     Timber::e
                 )

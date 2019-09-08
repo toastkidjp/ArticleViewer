@@ -128,7 +128,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
                             if (content.isNullOrBlank()) {
                                 return@subscribe
                             }
-                            fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
+                            fragmentControl?.replaceFragment(ContentViewerFragment.make(title, content))
                         },
                         Timber::e
                     )
