@@ -19,13 +19,13 @@ import jp.toastkid.article_viewer.article.list.SearchResult
 @Dao
 interface ArticleRepository {
 
-    @Query("SELECT * FROM article ORDER BY lastModified DESC LIMIT 500")
+    @Query("SELECT * FROM article ORDER BY lastModified DESC")
     fun getAllWithContent(): List<Article>
 
     @Query("SELECT title, lastModified, length FROM article ORDER BY lastModified DESC LIMIT 500")
     fun getAll(): List<SearchResult>
 
-    @Query("SELECT title, lastModified, length FROM article WHERE title LIKE :title ORDER BY lastModified DESC LIMIT 500")
+    @Query("SELECT title, lastModified, length FROM article WHERE title LIKE :title ORDER BY lastModified DESC")
     fun filter(title: String): List<SearchResult>
 
     @Query("SELECT content FROM article WHERE title = :title LIMIT 1")
