@@ -80,6 +80,35 @@ class ArticleListFragment : Fragment(), SearchFunction {
         if (context is FragmentControl) {
             fragmentControl = context
         }
+
+        adapter = Adapter(
+            LayoutInflater.from(context),
+            { title ->
+                Maybe.fromCallable { articleRepository.findContentByTitle(title) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { content ->
+                            if (content.isNullOrBlank()) {
+                                return@subscribe
+                            }
+                            fragmentControl?.replaceFragment(ContentViewerFragment.make(title, content))
+                        },
+                        Timber::e
+                    )
+                    .addTo(disposables)
+            },
+            {
+                if (preferencesWrapper.containsBookmark(it)) {
+                    Snackbar.make(results, "「$it」 is already added.", Snackbar.LENGTH_SHORT).show()
+                    return@Adapter
+                }
+                preferencesWrapper.addBookmark(it)
+                Snackbar.make(results, "It has added $it.", Snackbar.LENGTH_SHORT).show()
+            }
+        )
+
+        retainInstance = true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,33 +145,6 @@ class ArticleListFragment : Fragment(), SearchFunction {
         super.onViewCreated(view, savedInstanceState)
 
         val activityContext = context ?: return
-
-        adapter = Adapter(
-            LayoutInflater.from(activityContext),
-            { title ->
-                Maybe.fromCallable { articleRepository.findContentByTitle(title) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                        { content ->
-                            if (content.isNullOrBlank()) {
-                                return@subscribe
-                            }
-                            fragmentControl?.replaceFragment(ContentViewerFragment.make(title, content))
-                        },
-                        Timber::e
-                    )
-                    .addTo(disposables)
-            },
-            {
-                if (preferencesWrapper.containsBookmark(it)) {
-                    Snackbar.make(results, "「$it」 is already added.", Snackbar.LENGTH_SHORT).show()
-                    return@Adapter
-                }
-                preferencesWrapper.addBookmark(it)
-                Snackbar.make(results, "It has added $it.", Snackbar.LENGTH_SHORT).show()
-            }
-            )
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
     }
