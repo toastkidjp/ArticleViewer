@@ -175,6 +175,14 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         super.onBackPressed()
         if (supportFragmentManager.backStackEntryCount == 0) {
             finish()
+            return
+        }
+
+        supportFragmentManager.fragments.let {
+            val fragment = it[it.size - 1]
+            if (fragment is SearchFunction) {
+                searchFunction = fragment
+            }
         }
     }
 
