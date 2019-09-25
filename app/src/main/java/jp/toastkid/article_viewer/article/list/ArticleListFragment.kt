@@ -41,16 +41,30 @@ import kotlinx.android.synthetic.main.fragment_article_list.*
 import timber.log.Timber
 
 /**
+ * Article list fragment.
+ *
  * @author toastkidjp
  */
 class ArticleListFragment : Fragment(), SearchFunction {
 
+    /**
+     * List item adapter.
+     */
     private lateinit var adapter: Adapter
 
+    /**
+     * Preferences wrapper.
+     */
     private lateinit var preferencesWrapper: PreferencesWrapper
 
+    /**
+     * Use for read articles from DB.
+     */
     private lateinit var articleRepository: ArticleRepository
 
+    /**
+     * Use for receiving broadcast.
+     */
     private val progressBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             progressCallback.hideProgress()
@@ -58,10 +72,19 @@ class ArticleListFragment : Fragment(), SearchFunction {
         }
     }
 
+    /**
+     * Progress callback.
+     */
     private lateinit var progressCallback: ProgressCallback
 
+    /**
+     * Use for switching fragment.
+     */
     private var fragmentControl: FragmentControl? = null
 
+    /**
+     * [CompositeDisposable].
+     */
     private val disposables = CompositeDisposable()
 
     override fun onAttach(context: Context?) {
