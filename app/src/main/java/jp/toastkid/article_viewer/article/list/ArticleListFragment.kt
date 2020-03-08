@@ -82,6 +82,8 @@ class ArticleListFragment : Fragment(), SearchFunction {
      */
     private var fragmentControl: FragmentControl? = null
 
+    private val tokenizer = NgramTokenizer()
+
     /**
      * [CompositeDisposable].
      */
@@ -186,8 +188,6 @@ class ArticleListFragment : Fragment(), SearchFunction {
             return
         }
 
-        val tokenizer = NgramTokenizer()
-
         query(
             Maybe.fromCallable { articleRepository.search("${tokenizer(keyword, 2)}") }
                 .subscribeOn(Schedulers.io())
@@ -207,7 +207,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
         }
 
         query(
-            Maybe.fromCallable { articleRepository.filter("%$keyword%") }
+            Maybe.fromCallable { articleRepository.search("${tokenizer(keyword, 2)}") }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .flatMapObservable { it.toObservable() }
