@@ -21,5 +21,5 @@ class AndKeywordFilter(keyword: String) {
 
     operator fun invoke(article: Article) =
         keywords.all { article.title.contains(it) }
-                || keywords.all { article.content.contains(it) }
+                || keywords.all { article.contentText.contains(it) }
 }

@@ -32,10 +32,10 @@ import jp.toastkid.article_viewer.PreferencesWrapper
 import jp.toastkid.article_viewer.R
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerFragment
-import jp.toastkid.article_viewer.article.search.AndKeywordFilter
 import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
+import jp.toastkid.article_viewer.tokenizer.NgramTokenizer
 import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.fragment_article_list.*
 import timber.log.Timber
@@ -186,15 +186,13 @@ class ArticleListFragment : Fragment(), SearchFunction {
             return
         }
 
-        val keywordFilter = AndKeywordFilter(keyword)
+        val tokenizer = NgramTokenizer()
 
         query(
-            Maybe.fromCallable { articleRepository.getAllWithContent() }
+            Maybe.fromCallable { articleRepository.search("${tokenizer(keyword, 2)}") }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .flatMapObservable { it.toObservable() }
-                .filter { keywordFilter(it) }
-                .map { it.toSearchResult() }
         )
     }
 
@@ -222,6 +220,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
 
         val start = System.currentTimeMillis()
         results
+            .doOnTerminate { setSearchEnded(System.currentTimeMillis() - start) }
             .subscribe(
                 adapter::add,
                 {

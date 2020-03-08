@@ -28,11 +28,14 @@ interface ArticleRepository {
     @Query("SELECT title, lastModified, length FROM article WHERE title LIKE :title ORDER BY lastModified DESC")
     fun filter(title: String): List<SearchResult>
 
-    @Query("SELECT content FROM article WHERE title = :title LIMIT 1")
+    @Query("SELECT contentText FROM article WHERE title = :title LIMIT 1")
     fun findContentByTitle(title: String): String?
 
     @Query("SELECT * FROM article WHERE title LIKE :title LIMIT 1")
     fun findFirst(title: String): Article?
+
+    @Query("SELECT article.title, article.lastModified, article.length FROM article JOIN articleFts ON (article.id = articleFts.docid) WHERE articleFts MATCH :query")
+    fun search(query: String): List<SearchResult>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: Article)

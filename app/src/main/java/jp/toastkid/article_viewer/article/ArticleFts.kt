@@ -8,27 +8,14 @@
 package jp.toastkid.article_viewer.article
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-import jp.toastkid.article_viewer.article.list.SearchResult
+import androidx.room.Fts4
+import androidx.room.FtsOptions
 
 /**
  * @author toastkidjp
  */
-@Entity
-class Article(
-    @PrimaryKey
-    var id: Int
-) {
-
-    var title: String = ""
-
-    var contentText: String = ""
-
-    var lastModified: Long = 0L
-
-    var length: Int = 0
-
+@Fts4(contentEntity = Article::class, tokenizer = FtsOptions.TOKENIZER_PORTER)
+@Entity(tableName = "articleFts")
+class ArticleFts {
     var bigram: String = ""
-
-    fun toSearchResult() = SearchResult(title, lastModified, length)
 }

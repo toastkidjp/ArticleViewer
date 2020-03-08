@@ -16,18 +16,18 @@ class AndKeywordFilterTest {
 
         assertTrue(
             keywordFilter(
-                Article().also {
+                Article(4).also {
                     it.title = "android"
-                    it.content = "Orange is good"
+                    it.contentText = "Orange is good"
                 }
             )
         )
 
         assertFalse(
             keywordFilter(
-                Article().also {
+                Article(3).also {
                     it.title = "iOS all"
-                    it.content = "Orange is good"
+                    it.contentText = "Orange is good"
                 }
             )
         )
@@ -39,18 +39,18 @@ class AndKeywordFilterTest {
 
         assertFalse(
             keywordFilter(
-                Article().also {
+                Article(1).also {
                     it.title = "android"
-                    it.content = "Orange is good"
+                    it.contentText = "Orange is good"
                 }
             )
         )
 
         assertTrue(
             keywordFilter(
-                Article().also {
+                Article(2).also {
                     it.title = "android"
-                    it.content = "I have a book, it is so cool."
+                    it.contentText = "I have a book, it is so cool."
                 }
             )
         )
