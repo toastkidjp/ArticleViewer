@@ -7,6 +7,7 @@
  */
 package jp.toastkid.article_viewer.article
 
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.Fts4
 import androidx.room.FtsOptions
@@ -17,5 +18,6 @@ import androidx.room.FtsOptions
 @Fts4(contentEntity = Article::class, tokenizer = FtsOptions.TOKENIZER_PORTER)
 @Entity(tableName = "articleFts")
 class ArticleFts {
+    @Keep
     var bigram: String = ""
 }
