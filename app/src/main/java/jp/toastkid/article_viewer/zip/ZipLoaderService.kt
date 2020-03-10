@@ -52,18 +52,11 @@ class ZipLoaderService : JobIntentService() {
             .subscribe(
                 {
                     PreferencesWrapper(this).setLastUpdated(file.lastModified())
-                    /*progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
-                    all()*/
                     val progressIntent = Intent(ACTION_PROGRESS_BROADCAST)
                     progressIntent.putExtra("progress", 100)
                     sendBroadcast(progressIntent)
                 },
-                {
-                    Timber.e(it)
-                    /*progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE*/
-                }
+                Timber::e
             )
     }
 
@@ -73,9 +66,11 @@ class ZipLoaderService : JobIntentService() {
 
         fun makeProgressBroadcastIntentFilter() = IntentFilter(ACTION_PROGRESS_BROADCAST)
 
+        private const val KEY_TARGET = "target"
+
         fun start(context: Context, target: String) {
             val intent = Intent(context, ZipLoaderService::class.java)
-            intent.putExtra("target", target)
+            intent.putExtra(KEY_TARGET, target)
             enqueueWork(context, ZipLoaderService::class.java, 20, intent)
         }
     }
