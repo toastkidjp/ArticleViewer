@@ -29,12 +29,31 @@ import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
+/**
+ * Main activity of this app.
+ *
+ * @author toastkidjp
+ */
 class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
 
+    /**
+     * Article list fragment.
+     */
     private lateinit var articleListFragment: ArticleListFragment
 
+    /**
+     * Search function it's invoked from text field.
+     */
+    private var searchFunction: SearchFunction? = null
+
+    /**
+     * Use for handling input action.
+     */
     private val inputSubject = PublishSubject.create<String>()
 
+    /**
+     * Disposables.
+     */
     private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,11 +98,29 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         return if (fragment is SearchFunction) fragment else null
     }
 
+    /**
+     * Set fragment to content area.
+     *
+     * @param fragment [Fragment]
+     */
     private fun setFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_area, fragment)
         transaction.addToBackStack(fragment::class.java.canonicalName)
         transaction.commit()
+
+        extractSearchFunction(fragment)
+    }
+
+    /**
+     * Extract function callback from fragment.
+     *
+     * @param fragment [Fragment]
+     */
+    private fun extractSearchFunction(fragment: Fragment) {
+        if (fragment is SearchFunction) {
+            searchFunction = fragment
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -108,6 +145,9 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             .addTo(disposables)
     }
 
+    /**
+     * Select target zip file.
+     */
     private fun selectTargetFile() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -115,6 +155,9 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         startActivityForResult(intent, 1)
     }
 
+    /**
+     * Update list if need.
+     */
     private fun updateIfNeed() {
         val preferencesWrapper = PreferencesWrapper(this)
         val target = preferencesWrapper.getTarget()

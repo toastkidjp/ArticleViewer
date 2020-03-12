@@ -8,11 +8,23 @@
 package jp.toastkid.article_viewer.common
 
 /**
+ * Search function callbacks.
+ *
  * @author toastkidjp
  */
 interface SearchFunction {
 
+    /**
+     * Search action with keyword string.
+     *
+     * @param keyword nullable string
+     */
     fun search(keyword: String?)
 
+    /**
+     * Filter action with keyword string.
+     *
+     * @param keyword nullable string
+     */
     fun filter(keyword: String?)
 }

@@ -62,12 +62,27 @@ class ZipLoaderService : JobIntentService() {
 
     companion object {
 
+        /**
+         * Broadcast action name.
+         */
         private const val ACTION_PROGRESS_BROADCAST = "jp.toastkid.articles.importing.progress"
 
+        /**
+         * Make intent filter.
+         */
         fun makeProgressBroadcastIntentFilter() = IntentFilter(ACTION_PROGRESS_BROADCAST)
 
+        /**
+         * Extra key of target.
+         */
         private const val KEY_TARGET = "target"
 
+        /**
+         * Start service.
+         *
+         * @param context [Context]
+         * @param target target zip file
+         */
         fun start(context: Context, target: String) {
             val intent = Intent(context, ZipLoaderService::class.java)
             intent.putExtra(KEY_TARGET, target)
