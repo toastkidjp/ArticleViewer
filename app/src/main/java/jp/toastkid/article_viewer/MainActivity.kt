@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             if (keyword.isBlank()) {
                 return@setOnEditorActionListener true
             }
-            searchFunction?.search(keyword)
+            getCurrentSearchFunction()?.search(keyword)
             true
         }
 
@@ -86,10 +86,16 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         inputSubject.distinctUntilChanged()
             .debounce(1400L, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { searchFunction?.filter(it) }
+            .subscribe { getCurrentSearchFunction()?.filter(it) }
             .addTo(disposables)
 
         setFragment(articleListFragment)
+    }
+
+    private fun getCurrentSearchFunction(): SearchFunction? {
+        val supportFragmentManager = supportFragmentManager ?: return null
+        val fragment = supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1]
+        return if (fragment is SearchFunction) fragment else null
     }
 
     /**
@@ -213,8 +219,6 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         transaction.add(R.id.fragment_area, fragment)
         transaction.addToBackStack(fragment::class.java.canonicalName)
         transaction.commit()
-
-        extractSearchFunction(fragment)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
