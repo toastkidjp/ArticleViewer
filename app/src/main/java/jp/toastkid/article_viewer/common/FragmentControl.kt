@@ -10,9 +10,16 @@ package jp.toastkid.article_viewer.common
 import androidx.fragment.app.Fragment
 
 /**
+ * Fragment control callbacks.
+ *
  * @author toastkidjp
  */
 interface FragmentControl {
 
+    /**
+     * Use for switching fragment from fragment.
+     *
+     * @param fragment [Fragment]
+     */
     fun addFragment(fragment: Fragment)
 }
