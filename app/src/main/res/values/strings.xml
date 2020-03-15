@@ -15,4 +15,5 @@
     <string name="action_switch_title_filter">Use title filter</string>
     <string name="action_calendar">Calendar</string>
     <string name="action_bookmark">Bookmark</string>
+    <string name="action_random_article">Random article</string>
 </resources>

@@ -37,7 +37,7 @@ class ZipLoaderService : JobIntentService() {
             BuildConfig.APPLICATION_ID
         ).build()
 
-        val articleRepository = dataBase.diaryRepository()
+        val articleRepository = dataBase.articleRepository()
 
         val file = File(FileExtractorFromUri(this, intent.getStringExtra("target").toUri()))
 
@@ -52,30 +52,40 @@ class ZipLoaderService : JobIntentService() {
             .subscribe(
                 {
                     PreferencesWrapper(this).setLastUpdated(file.lastModified())
-                    /*progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE
-                    all()*/
                     val progressIntent = Intent(ACTION_PROGRESS_BROADCAST)
                     progressIntent.putExtra("progress", 100)
                     sendBroadcast(progressIntent)
                 },
-                {
-                    Timber.e(it)
-                    /*progress.visibility = View.GONE
-                    progress_circular.visibility = View.GONE*/
-                }
+                Timber::e
             )
     }
 
     companion object {
 
+        /**
+         * Broadcast action name.
+         */
         private const val ACTION_PROGRESS_BROADCAST = "jp.toastkid.articles.importing.progress"
 
+        /**
+         * Make intent filter.
+         */
         fun makeProgressBroadcastIntentFilter() = IntentFilter(ACTION_PROGRESS_BROADCAST)
 
+        /**
+         * Extra key of target.
+         */
+        private const val KEY_TARGET = "target"
+
+        /**
+         * Start service.
+         *
+         * @param context [Context]
+         * @param target target zip file
+         */
         fun start(context: Context, target: String) {
             val intent = Intent(context, ZipLoaderService::class.java)
-            intent.putExtra("target", target)
+            intent.putExtra(KEY_TARGET, target)
             enqueueWork(context, ZipLoaderService::class.java, 20, intent)
         }
     }

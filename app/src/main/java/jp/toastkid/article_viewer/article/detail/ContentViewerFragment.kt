@@ -9,9 +9,7 @@ package jp.toastkid.article_viewer.article.detail
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import jp.toastkid.article_viewer.R
@@ -36,15 +34,32 @@ class ContentViewerFragment : Fragment(), SearchFunction {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_content, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        content.text = arguments?.getString("content")
-        arguments?.getString("title")?.also {
+        content.text = arguments?.getString(KEY_CONTENT)
+        arguments?.getString(KEY_TITLE)?.also {
             progressCallback?.setProgressMessage(it)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, menuInflater)
+        menu?.clear()
+        menuInflater?.inflate(R.menu.menu_content_viewer, menu)
+
+        menu?.findItem(R.id.action_to_top_content)?.setOnMenuItemClickListener {
+            content_scroll.smoothScrollTo(0, 0)
+            true
+        }
+
+        menu?.findItem(R.id.action_to_bottom_content)?.setOnMenuItemClickListener {
+            content_scroll.smoothScrollTo(0, content.height)
+            true
         }
     }
 
@@ -55,11 +70,15 @@ class ContentViewerFragment : Fragment(), SearchFunction {
     override fun filter(keyword: String?) = Unit
 
     companion object {
+        private const val KEY_CONTENT = "content"
+
+        private const val KEY_TITLE = "title"
+
         fun make(title: String, content: String): Fragment
                 = ContentViewerFragment().also {
                     it.arguments = bundleOf(
-                        "content" to content,
-                        "title" to title
+                        KEY_CONTENT to content,
+                        KEY_TITLE to title
                     )
                 }
     }
