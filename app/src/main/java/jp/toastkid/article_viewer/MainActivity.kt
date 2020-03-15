@@ -19,6 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
 import jp.toastkid.article_viewer.article.list.ArticleListFragment
+import jp.toastkid.article_viewer.calendar.CalendarFragment
 import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
@@ -40,6 +41,8 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
      * Article list fragment.
      */
     private lateinit var articleListFragment: ArticleListFragment
+
+    private lateinit var calendarFragment: CalendarFragment
 
     /**
      * Search function it's invoked from text field.
@@ -186,6 +189,13 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
             R.id.action_settings -> true
             R.id.action_set_target -> {
                 selectTargetFile()
+                return true
+            }
+            R.id.action_calendar -> {
+                if (!::calendarFragment.isInitialized) {
+                    calendarFragment = CalendarFragment()
+                }
+                addFragment(calendarFragment)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
