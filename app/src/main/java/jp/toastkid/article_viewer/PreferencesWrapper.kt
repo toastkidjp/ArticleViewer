@@ -19,7 +19,7 @@ class PreferencesWrapper(context: Context) {
      * TODO Divide and move package.
      */
     private enum class Key {
-        FILE_PATH, LAST_UPDATED, USE_TITLE_FILTER
+        FILE_PATH, LAST_UPDATED, USE_TITLE_FILTER, BOOKMARK
     }
 
     private val preferences: SharedPreferences =
@@ -52,5 +52,32 @@ class PreferencesWrapper(context: Context) {
 
     fun useTitleFilter(): Boolean {
         return preferences.getBoolean(Key.USE_TITLE_FILTER.name, true)
+    }
+
+    private fun readBookmark(): MutableList<String> {
+        return preferences.getString(Key.BOOKMARK.name, "")
+            ?.split(System.lineSeparator())
+            ?.filter { it.isNotBlank() }
+            ?.toMutableList()
+            ?: mutableListOf()
+    }
+
+    fun addBookmark(title: String) {
+        val bookmarks = readBookmark()
+        bookmarks.add(title)
+        val lineSeparator = System.lineSeparator()
+        preferences.edit().putString(
+            Key.BOOKMARK.name,
+            bookmarks.reduce { base, item -> "$base$lineSeparator$item" }
+            )
+            .apply()
+    }
+
+    fun bookmark(): Collection<String> {
+        return readBookmark()
+    }
+
+    fun containsBookmark(title: String): Boolean {
+        return bookmark().contains(title)
     }
 }

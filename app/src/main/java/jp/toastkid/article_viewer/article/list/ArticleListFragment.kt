@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -136,16 +137,33 @@ class ArticleListFragment : Fragment(), SearchFunction {
 
         val activityContext = context ?: return
 
-        adapter = Adapter(LayoutInflater.from(activityContext)) { title ->
-            Maybe.fromCallable { articleRepository.findContentByTitle(title) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { content -> openArticle(title, content) },
-                    Timber::e
-                )
-                .addTo(disposables)
-        }
+        adapter = Adapter(
+            LayoutInflater.from(activityContext),
+            { title ->
+                Maybe.fromCallable { articleRepository.findContentByTitle(title) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { content ->
+                            if (content.isNullOrBlank()) {
+                                return@subscribe
+                            }
+                            fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
+                        },
+                        Timber::e
+                    )
+                    .addTo(disposables)
+            },
+            {
+                if (preferencesWrapper.containsBookmark(it)) {
+                    Snackbar.make(results, "「$it」 is already added.", Snackbar.LENGTH_SHORT).show()
+                    return@Adapter
+                }
+                preferencesWrapper.addBookmark(it)
+                Snackbar.make(results, "It has added $it.", Snackbar.LENGTH_SHORT).show()
+            }
+            )
+       
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
     }

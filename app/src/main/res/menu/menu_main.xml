@@ -17,4 +17,9 @@
           android:title="@string/action_calendar"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/action_bookmark"
+          android:title="@string/action_bookmark"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
 </menu>

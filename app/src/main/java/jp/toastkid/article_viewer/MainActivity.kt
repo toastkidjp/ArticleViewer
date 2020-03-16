@@ -13,12 +13,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.PublishSubject
 import jp.toastkid.article_viewer.article.list.ArticleListFragment
+import jp.toastkid.article_viewer.bookmark.BookmarkFragment
 import jp.toastkid.article_viewer.calendar.CalendarFragment
 import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.ProgressCallback
@@ -26,6 +28,7 @@ import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_content.*
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -43,6 +46,8 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
     private lateinit var articleListFragment: ArticleListFragment
 
     private lateinit var calendarFragment: CalendarFragment
+
+    private lateinit var bookmarkFragment: BookmarkFragment
 
     /**
      * Search function it's invoked from text field.
@@ -196,6 +201,18 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
                     calendarFragment = CalendarFragment()
                 }
                 addFragment(calendarFragment)
+                return true
+            }
+            R.id.action_bookmark -> {
+                if (PreferencesWrapper(this).bookmark().isEmpty()) {
+                    Snackbar.make(content, "Bookmark is empty.", Snackbar.LENGTH_SHORT).show()
+                    return true
+                }
+
+                if (!::bookmarkFragment.isInitialized) {
+                    bookmarkFragment = BookmarkFragment()
+                }
+                addFragment(bookmarkFragment)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
