@@ -17,8 +17,11 @@ class NgramTokenizer {
             return text
         }
 
-        return (0..(text.length - n))
+        val stringBuilder = StringBuilder()
+        (0..(text.length - n))
             .map { text.substring(it, (it + n)) }
-            .reduce { base, item -> "$base $item" }
+            .forEach { stringBuilder.append(it).append(' ') }
+        return stringBuilder.toString()
     }
+
 }
