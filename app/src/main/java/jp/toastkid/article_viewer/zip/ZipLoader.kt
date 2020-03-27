@@ -1,9 +1,12 @@
 package jp.toastkid.article_viewer.zip
 
 import android.os.Build
+import io.reactivex.Maybe
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
-import jp.toastkid.article_viewer.converter.NameDecoder
 import jp.toastkid.article_viewer.tokenizer.NgramTokenizer
 import okio.Okio
 import timber.log.Timber
@@ -17,7 +20,7 @@ import java.util.zip.ZipInputStream
 /**
  * @author toastkidjp
  */
-object ZipLoader {
+class ZipLoader(private val articleRepository: ArticleRepository) {
 
     private val CHARSET = Charset.forName("UTF-8")
 
@@ -25,10 +28,9 @@ object ZipLoader {
 
     private val id = AtomicInteger()
 
-    operator fun invoke(
-        inputStream: InputStream,
-        articleRepository: ArticleRepository
-        ) {
+    private val disposable = CompositeDisposable()
+
+    operator fun invoke(inputStream: InputStream) {
         ZipInputStream(inputStream, CHARSET)
             .also { zipInputStream ->
                 var nextEntry = zipInputStream.nextEntry
@@ -37,7 +39,8 @@ object ZipLoader {
                         nextEntry = zipInputStream.nextEntry
                         continue
                     }
-                    extract(zipInputStream, nextEntry, articleRepository)
+
+                    extract(zipInputStream, nextEntry)
                     nextEntry = try {
                         zipInputStream.nextEntry
                     } catch (e: IllegalArgumentException) {
@@ -52,25 +55,38 @@ object ZipLoader {
 
     private fun extract(
         zipInputStream: ZipInputStream,
-        nextEntry: ZipEntry,
-        articleRepository: ArticleRepository
+        nextEntry: ZipEntry
     ) {
         // use() occur java.io.IOException: Stream closed
-        Okio.buffer(Okio.source(zipInputStream)).also {
+        Okio.buffer(Okio.source(zipInputStream)).let {
+            val start = System.currentTimeMillis()
             val content = it.readUtf8()
             val article = Article(id.incrementAndGet()).also { a ->
-                a.title = NameDecoder(extractFileName(nextEntry.name))
+                a.title = extractFileName(nextEntry.name)
                 a.contentText = content
-                a.bigram = tokenizer(content, 2) ?: ""
                 a.length = a.contentText.length
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 article.lastModified = nextEntry.lastModifiedTime.to(TimeUnit.MILLISECONDS)
             }
-            articleRepository.insert(article)
+            Timber.i("${System.currentTimeMillis() - start}[ms] ${article.title}")
+            Maybe.fromCallable {
+                article.bigram = tokenizer(article.contentText, 2) ?: ""
+                article
+            }
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    {
+                        articleRepository.insert(it)
+                    },
+                    Timber::e
+                )
+                .addTo(disposable)
         }
     }
 
     private fun extractFileName(name: String) = name.substring(name.indexOf("/") + 1, name.lastIndexOf("."))
+
+    fun dispose() = disposable.clear()
 
 }

@@ -41,11 +41,9 @@ class ZipLoaderService : JobIntentService() {
 
         val file = File(FileExtractorFromUri(this, intent.getStringExtra("target").toUri()))
 
+        val zipLoader = ZipLoader(articleRepository)
         Completable.fromAction {
-            ZipLoader.invoke(
-                Okio.buffer(Okio.source(file)).inputStream(),
-                articleRepository
-            )
+            zipLoader.invoke(Okio.buffer(Okio.source(file)).inputStream())
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -58,9 +56,11 @@ class ZipLoaderService : JobIntentService() {
                     val progressIntent = Intent(ACTION_PROGRESS_BROADCAST)
                     progressIntent.putExtra("progress", 100)
                     sendBroadcast(progressIntent)
+                    zipLoader.dispose()
                 },
                 {
                     Timber.e(it)
+                    zipLoader.dispose()
                     /*progress.visibility = View.GONE
                     progress_circular.visibility = View.GONE*/
                 }
