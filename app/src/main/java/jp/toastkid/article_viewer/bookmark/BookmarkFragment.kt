@@ -96,7 +96,7 @@ class BookmarkFragment : Fragment() {
             BuildConfig.APPLICATION_ID
         ).build()
 
-        articleRepository = dataBase.diaryRepository()
+        articleRepository = dataBase.articleRepository()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -140,11 +140,11 @@ class BookmarkFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_to_top -> {
+        R.id.action_to_top_content -> {
             RecyclerViewScroller.toTop(results)
             true
         }
-        R.id.action_to_bottom -> {
+        R.id.action_to_bottom_content -> {
             RecyclerViewScroller.toBottom(results)
             true
         }

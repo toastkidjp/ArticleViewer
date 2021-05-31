@@ -172,7 +172,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
         if (content.isNullOrBlank()) {
             return
         }
-        fragmentControl?.addFragment(ContentViewerFragment.make(title, content))
+        fragmentControl?.replaceFragment(ContentViewerFragment.make(title, content))
     }
 
     fun all() {
@@ -267,14 +267,14 @@ class ArticleListFragment : Fragment(), SearchFunction {
             }
             R.id.action_random_article -> {
                 Maybe.fromCallable {
-                    val titles = articleRepository.getAllTitles()
+                    val titles = articleRepository.getAll()
                     val title = titles[(titles.size * Math.random()).toInt()]
-                    val content = articleRepository.findContentByTitle(title)
+                    val content = articleRepository.findContentByTitle(title.title)
                     return@fromCallable title to content
                 }.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                        { openArticle(it.first, it.second) },
+                        { openArticle(it.first.title, it.second) },
                         Timber::e
                     )
                     .addTo(disposables)
