@@ -17,5 +17,5 @@ import jp.toastkid.article_viewer.article.ArticleRepository
  */
 @Database(entities = [Article::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun diaryRepository(): ArticleRepository
+    abstract fun articleRepository(): ArticleRepository
 }
