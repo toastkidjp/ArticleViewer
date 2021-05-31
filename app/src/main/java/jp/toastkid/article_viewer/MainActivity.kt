@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
                 if (!::calendarFragment.isInitialized) {
                     calendarFragment = CalendarFragment()
                 }
-                addFragment(calendarFragment)
+                replaceFragment(calendarFragment)
                 return true
             }
             R.id.action_bookmark -> {
@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
                 if (!::bookmarkFragment.isInitialized) {
                     bookmarkFragment = BookmarkFragment()
                 }
-                addFragment(bookmarkFragment)
+                replaceFragment(bookmarkFragment)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
@@ -241,9 +241,9 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         search_result.also { it.text = message }
     }
 
-    override fun addFragment(fragment: Fragment) {
+    override fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.fragment_area, fragment)
+        transaction.replace(R.id.fragment_area, fragment)
         transaction.addToBackStack(fragment::class.java.canonicalName)
         transaction.commit()
     }

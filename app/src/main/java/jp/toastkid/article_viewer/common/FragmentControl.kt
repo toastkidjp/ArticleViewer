@@ -16,10 +16,6 @@ import androidx.fragment.app.Fragment
  */
 interface FragmentControl {
 
-    /**
-     * Use for switching fragment from fragment.
-     *
-     * @param fragment [Fragment]
-     */
-    fun addFragment(fragment: Fragment)
+    fun replaceFragment(fragment: Fragment)
+
 }
