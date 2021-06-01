@@ -7,10 +7,7 @@
  */
 package jp.toastkid.article_viewer.article
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import jp.toastkid.article_viewer.article.list.SearchResult
 
 /**
@@ -40,8 +37,9 @@ interface ArticleRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: Article)
 
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg entities: Article)
+    fun insertAll(entities: Collection<Article>)
 
     @Query("DELETE FROM article")
     fun deleteAll()

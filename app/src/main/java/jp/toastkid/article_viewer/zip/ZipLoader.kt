@@ -1,6 +1,7 @@
 package jp.toastkid.article_viewer.zip
 
 import android.os.Build
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -28,6 +29,8 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
 
     private val id = AtomicInteger()
 
+    private val items = mutableListOf<Article>()
+
     private val disposable = CompositeDisposable()
 
     operator fun invoke(inputStream: InputStream) {
@@ -41,6 +44,7 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
                     }
 
                     extract(zipInputStream, nextEntry)
+
                     nextEntry = try {
                         zipInputStream.nextEntry
                     } catch (e: IllegalArgumentException) {
@@ -51,6 +55,7 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
                 }
                 zipInputStream.closeEntry()
             }
+        flush()
     }
 
     private fun extract(
@@ -70,19 +75,25 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
                 article.lastModified = nextEntry.lastModifiedTime.to(TimeUnit.MILLISECONDS)
             }
             Timber.i("${System.currentTimeMillis() - start}[ms] ${article.title}")
-            Maybe.fromCallable {
-                article.bigram = tokenizer(article.contentText, 2) ?: ""
-                article
+
+            article.bigram = tokenizer(article.contentText, 2) ?: ""
+            items.add(article)
+            if (items.size > 1000) {
+                flush()
             }
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                    {
-                        articleRepository.insert(it)
-                    },
-                    Timber::e
-                )
-                .addTo(disposable)
         }
+    }
+
+    private fun flush() {
+        val updateItems = mutableListOf<Article>().also {
+            it.addAll(items)
+        }
+        items.clear()
+
+        Completable.fromAction { articleRepository.insertAll(updateItems) }
+            .subscribeOn(Schedulers.io())
+            .subscribe({ }, Timber::e)
+            .addTo(disposable)
     }
 
     private fun extractFileName(name: String) = name.substring(name.indexOf("/") + 1, name.lastIndexOf("."))
