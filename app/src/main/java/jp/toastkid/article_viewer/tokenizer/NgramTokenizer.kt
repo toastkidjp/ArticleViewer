@@ -18,10 +18,11 @@ class NgramTokenizer {
         }
 
         val stringBuilder = StringBuilder()
-        (0..(text.length - n))
-            .map { text.substring(it, (it + n)) }
-            .forEach { stringBuilder.append(it).append(' ') }
-        return stringBuilder.toString()
+        for (i in 0..(text.length - n)) {
+            val token = text.substring(i, (i + n))
+            stringBuilder.append(token).append(' ')
+        }
+        return stringBuilder.toString().trim()
     }
 
 }
