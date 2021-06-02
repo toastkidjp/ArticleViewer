@@ -289,4 +289,5 @@ class ArticleListFragment : Fragment(), SearchFunction {
         disposables.clear()
         context?.unregisterReceiver(progressBroadcastReceiver)
     }
+
 }
