@@ -21,4 +21,5 @@ object TitleFilterGenerator {
         val dateStr = if (date < 10) "0$date" else date.toString()
         return "$year-$monthStr-$dateStr%"
     }
+
 }
