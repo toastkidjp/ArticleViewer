@@ -73,12 +73,12 @@ class ArticleListFragment : Fragment(), SearchFunction {
     }
 
     /**
-     * Progress callback.
+     * Use for progress action.
      */
     private lateinit var progressCallback: ProgressCallback
 
     /**
-     * Use for switching fragment.
+     * Use for switch to content viewer fragment.
      */
     private var fragmentControl: FragmentControl? = null
 
@@ -156,7 +156,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
             BuildConfig.APPLICATION_ID
         ).build()
 
-        articleRepository = dataBase.diaryRepository()
+        articleRepository = dataBase.articleRepository()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -170,6 +170,13 @@ class ArticleListFragment : Fragment(), SearchFunction {
         val activityContext = context ?: return
         results.adapter = adapter
         results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
+    }
+
+    private fun openArticle(title: String, content: String?) {
+        if (content.isNullOrBlank()) {
+            return
+        }
+        fragmentControl?.replaceFragment(ContentViewerFragment.make(title, content))
     }
 
     fun all() {
@@ -262,11 +269,26 @@ class ArticleListFragment : Fragment(), SearchFunction {
                 all()
                 true
             }
-            R.id.action_to_top -> {
+            R.id.action_random_article -> {
+                Maybe.fromCallable {
+                    val titles = articleRepository.getAll()
+                    val title = titles[(titles.size * Math.random()).toInt()]
+                    val content = articleRepository.findContentByTitle(title.title)
+                    return@fromCallable title to content
+                }.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        { openArticle(it.first.title, it.second) },
+                        Timber::e
+                    )
+                    .addTo(disposables)
+                true
+            }
+            R.id.action_to_top_content -> {
                 RecyclerViewScroller.toTop(results)
                 true
             }
-            R.id.action_to_bottom -> {
+            R.id.action_to_bottom_content -> {
                 RecyclerViewScroller.toBottom(results)
                 true
             }

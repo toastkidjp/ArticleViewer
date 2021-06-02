@@ -65,7 +65,7 @@ class CalendarFragment : Fragment() {
             BuildConfig.APPLICATION_ID
         ).build()
 
-        articleRepository = dataBase.diaryRepository()
+        articleRepository = dataBase.articleRepository()
     }
 
     private fun setSelectedAction() {
