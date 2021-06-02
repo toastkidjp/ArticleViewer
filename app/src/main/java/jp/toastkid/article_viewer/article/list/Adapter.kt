@@ -13,6 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import jp.toastkid.article_viewer.R
 
 /**
+ * [SearchResult] list's adapter.
+ *
+ * @param layoutInflater [LayoutInflater]
+ * @param onClick Callback of click event
+ * @param onLongClick Callback of long-click event
+ *
  * @author toastkidjp
  */
 class Adapter(
@@ -37,10 +43,18 @@ class Adapter(
         holder.bind(items[position])
     }
 
+    /**
+     * Remove all item from current list.
+     */
     fun clear() {
         items.clear()
     }
 
+    /**
+     * Add new item.
+     *
+     * @param result new item
+     */
     fun add(result: SearchResult) {
         items.add(result)
     }
