@@ -70,13 +70,17 @@ class CalendarFragment : Fragment() {
 
     private fun setSelectedAction() {
         calendar.setOnDateChangeListener { _, year, month, date ->
-            Maybe.fromCallable { articleRepository.findFirst(TitleFilterGenerator(year, month + 1, date)) }
+            Maybe.fromCallable {
+                articleRepository.findFirst(TitleFilterGenerator(year, month + 1, date))
+            }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                         val article = it ?: return@subscribe
-                        fragmentControl.replaceFragment(ContentViewerFragment.make(article.title, article.contentText))
+                        fragmentControl.replaceFragment(
+                            ContentViewerFragment.make(article.title, article.contentText)
+                        )
                     },
                     Timber::e
                 )
