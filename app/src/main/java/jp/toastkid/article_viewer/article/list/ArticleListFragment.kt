@@ -285,9 +285,9 @@ class ArticleListFragment : Fragment(), SearchFunction {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         disposables.clear()
         context?.unregisterReceiver(progressBroadcastReceiver)
+        super.onDestroy()
     }
 
 }
