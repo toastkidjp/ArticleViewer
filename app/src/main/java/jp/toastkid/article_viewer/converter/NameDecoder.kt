@@ -24,7 +24,7 @@ object NameDecoder {
         byteStr.split("??")
         val strings = ArrayList<String>()
         val temp = StringBuilder(5)
-        (0 until byteStr.length).forEach {
+        (byteStr.indices).forEach {
             temp.append(byteStr.toCharArray()[it])
             if (temp.length == 2) {
                 strings.add(temp.toString())
