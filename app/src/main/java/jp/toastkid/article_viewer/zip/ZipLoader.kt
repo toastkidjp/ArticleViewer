@@ -2,7 +2,6 @@ package jp.toastkid.article_viewer.zip
 
 import android.os.Build
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +22,7 @@ import java.util.zip.ZipInputStream
  */
 class ZipLoader(private val articleRepository: ArticleRepository) {
 
-    private val CHARSET = Charset.forName("UTF-8")
+    private val charset = Charset.forName("UTF-8")
 
     private val tokenizer = NgramTokenizer()
 
@@ -34,7 +33,7 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
     private val disposable = CompositeDisposable()
 
     operator fun invoke(inputStream: InputStream) {
-        ZipInputStream(inputStream, CHARSET)
+        ZipInputStream(inputStream, charset)
             .also { zipInputStream ->
                 var nextEntry = zipInputStream.nextEntry
                 while (nextEntry != null) {
