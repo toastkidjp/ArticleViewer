@@ -97,7 +97,8 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
             .addTo(disposable)
     }
 
-    private fun extractFileName(name: String) = name.substring(name.indexOf("/") + 1, name.lastIndexOf("."))
+    private fun extractFileName(name: String) =
+        name.substring(name.indexOf("/") + 1, name.lastIndexOf("."))
 
     fun dispose() = disposable.clear()
 
