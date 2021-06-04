@@ -1,15 +1,21 @@
 package jp.toastkid.article_viewer.zip
 
 import android.os.Build
+import io.reactivex.Completable
+import io.reactivex.Maybe
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
-import jp.toastkid.article_viewer.converter.NameDecoder
 import okio.BufferedSource
+import jp.toastkid.article_viewer.tokenizer.NgramTokenizer
 import okio.Okio
 import timber.log.Timber
 import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
@@ -18,23 +24,20 @@ import java.util.zip.ZipInputStream
  *
  * @author toastkidjp
  */
-object ZipLoader {
+class ZipLoader(private val articleRepository: ArticleRepository) {
 
-    /**
-     * Title character set.
-     */
+
     private val CHARSET = Charset.forName("UTF-8")
 
-    /**
-     * Load file from zip.
-     *
-     * @param inputStream [InputStream]
-     * @param articleRepository [ArticleRepository]
-     */
-    operator fun invoke(
-        inputStream: InputStream,
-        articleRepository: ArticleRepository
-    ) {
+    private val tokenizer = NgramTokenizer()
+
+    private val id = AtomicInteger()
+
+    private val items = mutableListOf<Article>()
+
+    private val disposable = CompositeDisposable()
+
+    operator fun invoke(inputStream: InputStream) {
         ZipInputStream(inputStream, CHARSET)
             .also { zipInputStream ->
                 var nextEntry = zipInputStream.nextEntry
@@ -43,8 +46,9 @@ object ZipLoader {
                         nextEntry = zipInputStream.nextEntry
                         continue
                     }
-                    Okio.buffer(Okio.source(zipInputStream))
-                        .use { articleRepository.insert(makeArticle(it, nextEntry)) }
+
+                    extract(zipInputStream, nextEntry)
+
                     nextEntry = try {
                         zipInputStream.nextEntry
                     } catch (e: IllegalArgumentException) {
@@ -55,30 +59,49 @@ object ZipLoader {
                 }
                 zipInputStream.closeEntry()
             }
+        flush()
     }
 
-    /**
-     * Make article.
-     *
-     * @param it [BufferedSource]
-     * @param nextEntry [ZipEntry]
-     */
-    private fun makeArticle(
-        it: BufferedSource,
+    private fun extract(
+        zipInputStream: ZipInputStream,
         nextEntry: ZipEntry
-    ): Article {
-        val content = it.readUtf8()
-        val article = Article().also { a ->
-            a.title = NameDecoder(extractFileName(nextEntry.name))
-            a.content = content
-            a.length = a.content.length
+    ) {
+        // use() occur java.io.IOException: Stream closed
+        Okio.buffer(Okio.source(zipInputStream)).let {
+            val start = System.currentTimeMillis()
+            val content = it.readUtf8()
+            val article = Article(id.incrementAndGet()).also { a ->
+                a.title = extractFileName(nextEntry.name)
+                a.contentText = content
+                a.length = a.contentText.length
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                article.lastModified = nextEntry.lastModifiedTime.to(TimeUnit.MILLISECONDS)
+            }
+            Timber.i("${System.currentTimeMillis() - start}[ms] ${article.title}")
+
+            article.bigram = tokenizer(article.contentText, 2) ?: ""
+            items.add(article)
+            if (items.size > 1000) {
+                flush()
+            }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            article.lastModified = nextEntry.lastModifiedTime.to(TimeUnit.MILLISECONDS)
+    }
+
+    private fun flush() {
+        val updateItems = mutableListOf<Article>().also {
+            it.addAll(items)
         }
-        return article
+        items.clear()
+
+        Completable.fromAction { articleRepository.insertAll(updateItems) }
+            .subscribeOn(Schedulers.io())
+            .subscribe({ }, Timber::e)
+            .addTo(disposable)
     }
 
     private fun extractFileName(name: String) = name.substring(name.indexOf("/") + 1, name.lastIndexOf("."))
+
+    fun dispose() = disposable.clear()
 
 }

@@ -174,8 +174,8 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
         }
 
         val file = File(FileExtractorFromUri(this, target.toUri()))
+        articleListFragment.all()
         if (preferencesWrapper.getLastUpdated() == file.lastModified()) {
-            articleListFragment.all()
             return
         }
 

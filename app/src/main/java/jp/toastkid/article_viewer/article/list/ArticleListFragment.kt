@@ -11,7 +11,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,10 +37,10 @@ import jp.toastkid.article_viewer.PreferencesWrapper
 import jp.toastkid.article_viewer.R
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.article.detail.ContentViewerFragment
-import jp.toastkid.article_viewer.article.search.AndKeywordFilter
 import jp.toastkid.article_viewer.common.FragmentControl
 import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
+import jp.toastkid.article_viewer.tokenizer.NgramTokenizer
 import jp.toastkid.article_viewer.zip.ZipLoaderService
 import kotlinx.android.synthetic.main.fragment_article_list.*
 import timber.log.Timber
@@ -81,6 +86,8 @@ class ArticleListFragment : Fragment(), SearchFunction {
      * Use for switch to content viewer fragment.
      */
     private var fragmentControl: FragmentControl? = null
+
+    private val tokenizer = NgramTokenizer()
 
     /**
      * [CompositeDisposable].
@@ -193,15 +200,11 @@ class ArticleListFragment : Fragment(), SearchFunction {
             return
         }
 
-        val keywordFilter = AndKeywordFilter(keyword)
-
         query(
-            Maybe.fromCallable { articleRepository.getAllWithContent() }
+            Maybe.fromCallable { articleRepository.search("${tokenizer(keyword, 2)}") }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .flatMapObservable { it.toObservable() }
-                .filter { keywordFilter(it) }
-                .map { it.toSearchResult() }
         )
     }
 
@@ -216,7 +219,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
         }
 
         query(
-            Maybe.fromCallable { articleRepository.filter("%$keyword%") }
+            Maybe.fromCallable { articleRepository.search("${tokenizer(keyword, 2)}") }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .flatMapObservable { it.toObservable() }
@@ -229,6 +232,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
 
         val start = System.currentTimeMillis()
         results
+            .doOnTerminate { setSearchEnded(System.currentTimeMillis() - start) }
             .subscribe(
                 adapter::add,
                 {
@@ -303,8 +307,9 @@ class ArticleListFragment : Fragment(), SearchFunction {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         disposables.clear()
         context?.unregisterReceiver(progressBroadcastReceiver)
+        super.onDestroy()
     }
+
 }
