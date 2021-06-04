@@ -39,7 +39,11 @@ class CalendarFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_calendar, container, false)
     }
@@ -70,13 +74,17 @@ class CalendarFragment : Fragment() {
 
     private fun setSelectedAction() {
         calendar.setOnDateChangeListener { _, year, month, date ->
-            Maybe.fromCallable { articleRepository.findFirst(TitleFilterGenerator(year, month + 1, date)) }
+            Maybe.fromCallable {
+                articleRepository.findFirst(TitleFilterGenerator(year, month + 1, date))
+            }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                         val article = it ?: return@subscribe
-                        fragmentControl.replaceFragment(ContentViewerFragment.make(article.title, article.content))
+                        fragmentControl.replaceFragment(
+                            ContentViewerFragment.make(article.title, article.contentText)
+                        )
                     },
                     Timber::e
                 )

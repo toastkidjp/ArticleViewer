@@ -11,6 +11,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import jp.toastkid.article_viewer.article.list.SearchResult
 
 /**
@@ -28,17 +29,21 @@ interface ArticleRepository {
     @Query("SELECT title, lastModified, length FROM article WHERE title LIKE :title ORDER BY lastModified DESC LIMIT 500")
     fun filter(title: String): List<SearchResult>
 
-    @Query("SELECT content FROM article WHERE title = :title LIMIT 1")
+    @Query("SELECT contentText FROM article WHERE title = :title LIMIT 1")
     fun findContentByTitle(title: String): String?
 
     @Query("SELECT * FROM article WHERE title LIKE :title LIMIT 1")
     fun findFirst(title: String): Article?
 
+    @Query("SELECT article.title, article.lastModified, article.length FROM article JOIN articleFts ON (article.id = articleFts.docid) WHERE articleFts MATCH :query")
+    fun search(query: String): List<SearchResult>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(entity: Article)
 
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg entities: Article)
+    fun insertAll(entities: Collection<Article>)
 
     @Query("DELETE FROM article")
     fun deleteAll()
