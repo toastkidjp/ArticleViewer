@@ -26,6 +26,8 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
 
     private val charset = Charset.forName("UTF-8")
 
+    private val flushSize = 1000
+
     private val tokenizer = NgramTokenizer()
 
     private val id = AtomicInteger()
@@ -79,7 +81,7 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
 
             article.bigram = tokenizer(article.contentText, 2) ?: ""
             items.add(article)
-            if (items.size > 1000) {
+            if (items.size > flushSize) {
                 flush()
             }
         }
