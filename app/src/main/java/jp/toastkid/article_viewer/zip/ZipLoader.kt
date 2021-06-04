@@ -2,13 +2,11 @@ package jp.toastkid.article_viewer.zip
 
 import android.os.Build
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
-import okio.BufferedSource
 import jp.toastkid.article_viewer.tokenizer.NgramTokenizer
 import okio.Okio
 import timber.log.Timber
