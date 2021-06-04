@@ -26,7 +26,7 @@ interface ArticleRepository {
     @Query("SELECT title, lastModified, length FROM article ORDER BY lastModified DESC LIMIT 500")
     fun getAll(): List<SearchResult>
 
-    @Query("SELECT title, lastModified, length FROM article WHERE title LIKE :title ORDER BY lastModified DESC")
+    @Query("SELECT title, lastModified, length FROM article WHERE title LIKE :title ORDER BY lastModified DESC LIMIT 500")
     fun filter(title: String): List<SearchResult>
 
     @Query("SELECT contentText FROM article WHERE title = :title LIMIT 1")

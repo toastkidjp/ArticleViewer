@@ -18,6 +18,8 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 /**
+ * Load articles from zip file.
+ *
  * @author toastkidjp
  */
 class ZipLoader(private val articleRepository: ArticleRepository) {
