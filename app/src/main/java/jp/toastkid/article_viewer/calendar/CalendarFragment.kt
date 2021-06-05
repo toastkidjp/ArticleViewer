@@ -75,7 +75,7 @@ class CalendarFragment : Fragment() {
     private fun setSelectedAction() {
         calendar.setOnDateChangeListener { _, year, month, date ->
             Maybe.fromCallable {
-                articleRepository.findFirst(TitleFilterGenerator(year, month + 1, date))
+                articleRepository.findFirst(TitleFilterGenerator()(year, month + 1, date))
             }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
