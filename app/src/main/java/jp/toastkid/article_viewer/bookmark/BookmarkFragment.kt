@@ -138,7 +138,6 @@ class BookmarkFragment : Fragment() {
             { }
         )
         results.adapter = adapter
-        results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
         preferencesWrapper.bookmark().forEach { adapter.add(SearchResult(it, 0, 0)) }
     }
 
