@@ -169,4 +169,5 @@ class BookmarkFragment : Fragment() {
         super.onDestroy()
         disposables.clear()
     }
+
 }
