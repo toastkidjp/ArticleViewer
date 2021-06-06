@@ -30,4 +30,5 @@ object RecyclerViewScroller {
         }
         recyclerView.post { recyclerView.smoothScrollToPosition(itemCount - 1) }
     }
+
 }
