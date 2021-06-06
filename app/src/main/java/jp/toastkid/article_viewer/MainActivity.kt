@@ -27,8 +27,12 @@ import jp.toastkid.article_viewer.common.ProgressCallback
 import jp.toastkid.article_viewer.common.SearchFunction
 import jp.toastkid.article_viewer.zip.FileExtractorFromUri
 import jp.toastkid.article_viewer.zip.ZipLoaderService
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_content.*
+import kotlinx.android.synthetic.main.activity_main.input
+import kotlinx.android.synthetic.main.activity_main.progress
+import kotlinx.android.synthetic.main.activity_main.progress_circular
+import kotlinx.android.synthetic.main.activity_main.search_result
+import kotlinx.android.synthetic.main.activity_main.toolbar
+import kotlinx.android.synthetic.main.fragment_content.content
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
