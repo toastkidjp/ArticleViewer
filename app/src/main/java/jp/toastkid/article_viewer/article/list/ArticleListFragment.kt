@@ -176,7 +176,6 @@ class ArticleListFragment : Fragment(), SearchFunction {
 
         val activityContext = context ?: return
         results.adapter = adapter
-        results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
     }
 
     private fun openArticle(title: String, content: String?) {
