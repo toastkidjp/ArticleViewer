@@ -18,6 +18,7 @@ import androidx.room.FtsOptions
 @Fts4(contentEntity = Article::class, tokenizer = FtsOptions.TOKENIZER_PORTER)
 @Entity(tableName = "articleFts")
 class ArticleFts {
+    @Suppress("unused")
     @Keep
     var bigram: String = ""
 }

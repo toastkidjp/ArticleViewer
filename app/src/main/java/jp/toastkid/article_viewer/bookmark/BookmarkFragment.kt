@@ -9,7 +9,12 @@ package jp.toastkid.article_viewer.bookmark
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -99,7 +104,11 @@ class BookmarkFragment : Fragment() {
         articleRepository = dataBase.articleRepository()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         return inflater.inflate(R.layout.fragment_bookmark_list, container, false)
     }
@@ -136,7 +145,8 @@ class BookmarkFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menuInflater?.inflate(R.menu.menu_article_list, menu)
-        menu?.findItem(R.id.action_switch_title_filter)?.isChecked = preferencesWrapper.useTitleFilter()
+        menu?.findItem(R.id.action_switch_title_filter)?.isChecked =
+            preferencesWrapper.useTitleFilter()
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
