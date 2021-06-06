@@ -165,8 +165,8 @@ class BookmarkFragment : Fragment() {
         else -> super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDetach() {
+        super.onDetach()
         disposables.clear()
     }
 
