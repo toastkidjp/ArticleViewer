@@ -35,7 +35,7 @@ class ViewHolder(
             true
         }
         view.findViewById<TextView>(R.id.sub_text).text =
-            "Last updated: ${DATE_FORMAT.get()?.format(Date().also { it.time = result.lastModified })}" +
+            "Last updated: ${android.text.format.DateFormat.format("yyyy/MM/dd(E) HH:mm:ss", result.lastModified)}" +
                     " / ${result.length} chars"
     }
 
