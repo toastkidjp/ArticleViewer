@@ -174,7 +174,6 @@ class ArticleListFragment : Fragment(), SearchFunction {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val activityContext = context ?: return
         results.adapter = adapter
     }
 
