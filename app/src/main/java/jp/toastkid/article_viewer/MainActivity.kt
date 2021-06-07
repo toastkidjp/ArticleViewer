@@ -269,8 +269,8 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         disposables.clear()
+        super.onDestroy()
     }
 
 }
