@@ -39,9 +39,4 @@ class ViewHolder(
                     " / ${result.length} chars"
     }
 
-    companion object {
-        private val DATE_FORMAT = object : ThreadLocal<DateFormat>() {
-            override fun initialValue() = SimpleDateFormat("yyyy/MM/dd(E) HH:mm:ss", Locale.JAPAN)
-        }
-    }
 }
