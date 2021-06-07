@@ -35,4 +35,5 @@ class TitleFilterGeneratorTest {
             titleFilterGenerator(2019, 11, 11)
         )
     }
+
 }
