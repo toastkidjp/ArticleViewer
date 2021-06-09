@@ -17,4 +17,5 @@ interface ProgressCallback {
     fun hideProgress()
 
     fun setProgressMessage(message: String)
+
 }

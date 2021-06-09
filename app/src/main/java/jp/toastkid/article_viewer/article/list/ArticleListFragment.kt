@@ -19,8 +19,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Completable
@@ -174,9 +172,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val activityContext = context ?: return
         results.adapter = adapter
-        results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
     }
 
     private fun openArticle(title: String, content: String?) {

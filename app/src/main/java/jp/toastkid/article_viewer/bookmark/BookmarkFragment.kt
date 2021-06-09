@@ -16,7 +16,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import io.reactivex.Maybe
@@ -138,7 +137,6 @@ class BookmarkFragment : Fragment() {
             { }
         )
         results.adapter = adapter
-        results.layoutManager = LinearLayoutManager(activityContext, RecyclerView.VERTICAL, false)
         preferencesWrapper.bookmark().forEach { adapter.add(SearchResult(it, 0, 0)) }
     }
 
@@ -167,8 +165,9 @@ class BookmarkFragment : Fragment() {
         else -> super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDetach() {
+        super.onDetach()
         disposables.clear()
     }
+
 }

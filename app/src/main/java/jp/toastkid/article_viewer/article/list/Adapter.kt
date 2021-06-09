@@ -58,4 +58,5 @@ class Adapter(
     fun add(result: SearchResult) {
         items.add(result)
     }
+
 }

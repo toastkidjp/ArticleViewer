@@ -5,7 +5,7 @@ package jp.toastkid.article_viewer.calendar
  *
  * @author toastkidjp
  */
-object TitleFilterGenerator {
+class TitleFilterGenerator {
 
     /**
      * Make filtering query with year, month, and date.
@@ -17,9 +17,11 @@ object TitleFilterGenerator {
      * @return Title filter string
      */
     operator fun invoke(year: Int, month: Int, date: Int): String {
-        val monthStr = if (month < 10) "0$month" else month.toString()
-        val dateStr = if (date < 10) "0$date" else date.toString()
+        val monthStr = formatDigit(month)
+        val dateStr = formatDigit(date)
         return "$year-$monthStr-$dateStr%"
     }
+
+    private fun formatDigit(digit: Int) = if (digit < 10) "0$digit" else digit.toString()
 
 }
