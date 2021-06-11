@@ -21,6 +21,8 @@ import jp.toastkid.article_viewer.AppDatabase
 import jp.toastkid.article_viewer.BuildConfig
 import jp.toastkid.article_viewer.PreferencesWrapper
 import okio.Okio
+import okio.buffer
+import okio.source
 import timber.log.Timber
 import java.io.File
 
@@ -43,7 +45,7 @@ class ZipLoaderService : JobIntentService() {
 
         val zipLoader = ZipLoader(articleRepository)
         Completable.fromAction {
-            zipLoader.invoke(Okio.buffer(Okio.source(file)).inputStream())
+            zipLoader.invoke(file.source().buffer().inputStream())
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
