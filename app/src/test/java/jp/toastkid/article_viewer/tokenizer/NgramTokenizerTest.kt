@@ -18,7 +18,7 @@ class NgramTokenizerTest {
         assertEquals("東京特 京特許 特許許 許許可 許可局", tokenizer("東京特許許可局", 3))
     }
 
-    @Ignore
+    @Ignore("This test is too heavy.")
     @Test
     fun bench() {
         val tokenizer = NgramTokenizer()

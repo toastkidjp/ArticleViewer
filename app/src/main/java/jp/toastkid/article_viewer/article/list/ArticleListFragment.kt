@@ -92,7 +92,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
      */
     private val disposables = CompositeDisposable()
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if (context == null) {
@@ -257,7 +257,7 @@ class ArticleListFragment : Fragment(), SearchFunction {
             .addTo(disposables)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menuInflater?.inflate(R.menu.menu_article_list, menu)
         menu?.findItem(R.id.action_switch_title_filter)?.isChecked = preferencesWrapper.useTitleFilter()

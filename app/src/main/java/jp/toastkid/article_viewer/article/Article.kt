@@ -9,7 +9,6 @@ package jp.toastkid.article_viewer.article
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import jp.toastkid.article_viewer.article.list.SearchResult
 
 /**
  * @author toastkidjp

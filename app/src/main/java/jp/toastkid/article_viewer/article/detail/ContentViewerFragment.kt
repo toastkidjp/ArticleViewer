@@ -24,7 +24,7 @@ class ContentViewerFragment : Fragment(), SearchFunction {
 
     private var progressCallback: ProgressCallback? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if (context is ProgressCallback) {
@@ -51,7 +51,7 @@ class ContentViewerFragment : Fragment(), SearchFunction {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater)
         menu?.clear()
         menuInflater?.inflate(R.menu.menu_content_viewer, menu)
