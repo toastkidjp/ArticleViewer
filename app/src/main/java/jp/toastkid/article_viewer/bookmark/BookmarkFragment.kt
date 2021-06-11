@@ -69,10 +69,6 @@ class BookmarkFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (context == null) {
-            return
-        }
-
         preferencesWrapper = PreferencesWrapper(context)
 
         if (context is FragmentControl) {
