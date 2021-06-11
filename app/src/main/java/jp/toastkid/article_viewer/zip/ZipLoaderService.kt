@@ -42,7 +42,8 @@ class ZipLoaderService : JobIntentService() {
         val articleRepository = dataBase.articleRepository()
 
         val uri = intent.getStringExtra("target")?.toUri() ?: return
-        val file = File(FileExtractorFromUri(this, uri))
+        val pathname = FileExtractorFromUri(this, uri) ?: return
+        val file = File(pathname)
 
         val zipLoader = ZipLoader(articleRepository)
         Completable.fromAction {
