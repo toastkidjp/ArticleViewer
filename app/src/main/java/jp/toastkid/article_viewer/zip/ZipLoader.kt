@@ -8,7 +8,6 @@ import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.tokenizer.NgramTokenizer
-import okio.Okio
 import okio.buffer
 import okio.source
 import timber.log.Timber
