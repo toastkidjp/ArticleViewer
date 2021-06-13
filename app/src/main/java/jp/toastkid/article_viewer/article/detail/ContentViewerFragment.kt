@@ -51,17 +51,17 @@ class ContentViewerFragment : Fragment(), SearchFunction {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, menuInflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater)
-        menu?.clear()
-        menuInflater?.inflate(R.menu.menu_content_viewer, menu)
+        menu.clear()
+        menuInflater.inflate(R.menu.menu_content_viewer, menu)
 
-        menu?.findItem(R.id.action_to_top_content)?.setOnMenuItemClickListener {
+        menu.findItem(R.id.action_to_top_content)?.setOnMenuItemClickListener {
             content_scroll.smoothScrollTo(0, 0)
             true
         }
 
-        menu?.findItem(R.id.action_to_bottom_content)?.setOnMenuItemClickListener {
+        menu.findItem(R.id.action_to_bottom_content)?.setOnMenuItemClickListener {
             content_scroll.smoothScrollTo(0, content.height)
             true
         }

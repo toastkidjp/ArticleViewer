@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), ProgressCallback, FragmentControl {
     }
 
     private fun getCurrentSearchFunction(): SearchFunction? {
-        val supportFragmentManager = supportFragmentManager ?: return null
+        val supportFragmentManager = supportFragmentManager
         val fragment = supportFragmentManager.fragments[supportFragmentManager.backStackEntryCount - 1]
         return if (fragment is SearchFunction) fragment else null
     }

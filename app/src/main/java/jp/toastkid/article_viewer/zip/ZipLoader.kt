@@ -8,7 +8,8 @@ import io.reactivex.schedulers.Schedulers
 import jp.toastkid.article_viewer.article.Article
 import jp.toastkid.article_viewer.article.ArticleRepository
 import jp.toastkid.article_viewer.tokenizer.NgramTokenizer
-import okio.Okio
+import okio.buffer
+import okio.source
 import timber.log.Timber
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -66,7 +67,7 @@ class ZipLoader(private val articleRepository: ArticleRepository) {
         nextEntry: ZipEntry
     ) {
         // use() occur java.io.IOException: Stream closed
-        Okio.buffer(Okio.source(zipInputStream)).let {
+        zipInputStream.source().buffer().let {
             val start = System.currentTimeMillis()
             val content = it.readUtf8()
             val article = Article(id.incrementAndGet()).also { a ->
